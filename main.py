@@ -2,19 +2,18 @@ import os
 import wget
 import json
 
-def download_file(url, download_dir="downloads"):
-    """Download a file from the given URL into a specific directory."""
+def download_file(url, filename=None, download_dir="downloads"):
+    """Download a file from the given URL into a specific directory with a specific filename."""
+    if filename is None:
+        filename = os.path.basename(url)
     
     # Create the download directory if it doesn't exist
     os.makedirs(download_dir, exist_ok=True)
     
-    # Get the filename from the URL
-    filename = os.path.basename(url)
-    
     # Construct the full path for the downloaded file
     full_path = os.path.join(download_dir, filename)
     
-    # Download the file to the specified directory
+    # Download the file to the specified directory with the given filename
     return wget.download(url, out=full_path)
 
 
@@ -63,8 +62,14 @@ def save_download_info(info, filename="download_info.json"):
 
 def check_and_download_file(url, download_dir):
     # Check if the URL has already been downloaded
+    # Check if download_info.json exists, if not create an empty file
+    if not os.path.exists("download_info.json"):
+        with open("download_info.json", "w") as json_file:
+            json.dump({}, json_file)
+
     with open("download_info.json", "r") as json_file:
         download_info = json.load(json_file)
+
     
     for entry in download_info.values():
         if entry["url"] == url:
@@ -77,7 +82,7 @@ def check_and_download_file(url, download_dir):
                 break
     
     # If we get here, either the URL wasn't found or the file was missing
-    filename = download_file(url, download_dir=download_dir)
+    filename = download_file(url, 'kak', download_dir=download_dir)
     
     # Create and save download information
     download_info = create_download_info(url, filename)
