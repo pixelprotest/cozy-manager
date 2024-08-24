@@ -2,6 +2,8 @@ import huggingface_hub
 import os
 import wget
 import json
+import civitdl
+import subprocess
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
@@ -54,8 +56,33 @@ def download_file_from_hf(url, filename=None, download_dir="downloads"):
     return full_path
 
 def download_file_from_civitai(url, filename=None, download_dir="downloads"):
+    # Create the download directory if it doesn't exist
+    os.makedirs(download_dir, exist_ok=True)
 
-    pass
+
+    full_path = download_dir
+
+    # Use civitdl as a command-line process to download the file
+    try:
+        command = [
+            "civitdl",
+            url,
+            full_path,
+        ]
+        
+        result = subprocess.run(command, capture_output=True, text=True, check=True)
+        
+        if result.returncode == 0:
+            return full_path
+        else:
+            print(f"Error downloading file from Civitai: {result.stderr}")
+            return None
+    except subprocess.CalledProcessError as e:
+        print(f"Error running civitdl: {e}")
+        return None
+    except Exception as e:
+        print(f"Unexpected error downloading file from Civitai: {e}")
+        return None
 
 
 def create_download_info(url, filename):
@@ -72,13 +99,24 @@ def create_download_info(url, filename):
         existing_info = {}
         next_id = 1
 
-    # Get file size in megabytes
-    file_size_mb = os.path.getsize(filename) / (1024 * 1024)
+    if 'civitai.com' in url:
+        source_name = "civitai"
+        # For Civitai downloads, we need to check the directory size
+        total_size = 0
+        for dirpath, dirnames, filenames in os.walk(filename):
+            for f in filenames:
+                fp = os.path.join(dirpath, f)
+                total_size += os.path.getsize(fp)
+        file_size_mb = total_size / (1024 * 1024)
+    else:
+        source_name = "huggingface"
+        # Get file size in megabytes
+        file_size_mb = os.path.getsize(filename) / (1024 * 1024)
 
     new_info = {
         "url": url,
         "local_filename": filename,
-        "source_name": "huggingface",
+        "source_name": source_name,
         "file_size_mb": round(file_size_mb, 2)  # Round to 2 decimal places
     }
     
@@ -87,8 +125,15 @@ def create_download_info(url, filename):
         new_info["author"] = parts[3]
         new_info["repo"] = parts[4]
         new_info["filename_in_repo"] = parts[-1]
-    
+    elif 'civitai.com' in url:
+        parts = url.split("/")
+        new_info["author"] = "unknown"
+        new_info["repo"] = "unknown"
+        new_info["filename_in_repo"] = "unknown"    
+
+    ## now add the new info with a new id 
     existing_info[str(next_id)] = new_info
+
     return existing_info
 
 def save_download_info(info, filename="download_info.json"):
@@ -130,8 +175,10 @@ def check_and_download_file(url, download_dir, filename=None):
     # If we get here, either the URL wasn't found or the file was missing
     if 'huggingface.co' in url:
         filename = download_file_from_hf(url, filename=filename, download_dir=download_dir)
-    else:
+    elif 'civitai.com' in url:
         filename = download_file_from_civitai(url, filename=filename, download_dir=download_dir) 
+    else:
+        filename = download_file(url, filename=filename, download_dir=download_dir)
 
     if should_add_info:
         # Create and save download information
@@ -143,8 +190,8 @@ def check_and_download_file(url, download_dir, filename=None):
 def main():
     # URL of the file to download
     # url = "https://huggingface.co/xinsir/controlnet-tile-sdxl-1.0/resolve/main/diffusion_pytorch_model.safetensors"
-    url = "https://huggingface.co/xinsir/controlnet-tile-sdxl-1.0/resolve/main/.gitattributes"
-    # url = "https://civitai.com/models/118025/360redmond-a-360-view-panorama-lora-for-sd-xl-10"
+    # url = "https://huggingface.co/xinsir/controlnet-tile-sdxl-1.0/resolve/main/.gitattributes"
+    url = "https://civitai.com/models/118025/360redmond-a-360-view-panorama-lora-for-sd-xl-10"
     # url = "https://huggingface.co/black-forest-labs/FLUX.1-dev/resolve/main/flux1-dev.safetensors"
 
     # Set up download directory
@@ -215,5 +262,5 @@ def main_redownload():
 
 if __name__ == "__main__":
     main()
-    main_clearspace()
-    main_redownload()
+    # main_clearspace()
+    # main_redownload()
