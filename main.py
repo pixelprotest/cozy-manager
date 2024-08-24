@@ -1,6 +1,16 @@
+import huggingface_hub
 import os
 import wget
 import json
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
+hf_token = os.getenv("HF_TOKEN")
+civitai_api_key = os.getenv("CIVITAI_API_KEY")
+
+def log_into_huggingface():
+    huggingface_hub.login(hf_token)
 
 def download_file(url, filename=None , download_dir="downloads"):
     """Download a file from the given URL into a specific directory with a specific filename."""
@@ -15,6 +25,37 @@ def download_file(url, filename=None , download_dir="downloads"):
     
     # Download the file to the specified directory with the given filename
     return wget.download(url, out=full_path)
+
+def download_file_from_hf(url, filename=None, download_dir="downloads"):
+    # Create the download directory if it doesn't exist
+    os.makedirs(download_dir, exist_ok=True)
+    
+    # If filename is not provided, use the last part of the URL
+    if filename is None:
+        filename = os.path.basename(url)
+    
+    # Construct the full path for the downloaded file
+    full_path = os.path.join(download_dir, filename)
+
+    repo_id = "/".join(url.split("/")[3:5]) ## extract repo_id from URL
+    filename_in_repo = "/".join(url.split("/")[7:]) ## extract filename from URL
+    # Download the file using huggingface_hub
+    huggingface_hub.hf_hub_download(
+        repo_id=repo_id,
+        filename=filename_in_repo,
+        local_dir=download_dir,
+        local_dir_use_symlinks=False
+    )
+    
+    ## now check fi the filename_in_repo is the same as the filename we wanted..
+    if filename!=filename_in_repo:
+        os.rename(os.path.join(download_dir, filename_in_repo), full_path)
+    
+    return full_path
+
+def download_file_from_civitai(url, filename=None, download_dir="downloads"):
+
+    pass
 
 
 def create_download_info(url, filename):
@@ -31,10 +72,14 @@ def create_download_info(url, filename):
         existing_info = {}
         next_id = 1
 
+    # Get file size in megabytes
+    file_size_mb = os.path.getsize(filename) / (1024 * 1024)
+
     new_info = {
         "url": url,
         "local_filename": filename,
-        "source_name": "huggingface"
+        "source_name": "huggingface",
+        "file_size_mb": round(file_size_mb, 2)  # Round to 2 decimal places
     }
     
     if "huggingface.co" in url:
@@ -83,8 +128,11 @@ def check_and_download_file(url, download_dir, filename=None):
                 break
     
     # If we get here, either the URL wasn't found or the file was missing
-    filename = download_file(url, filename=filename, download_dir=download_dir)
-    
+    if 'huggingface.co' in url:
+        filename = download_file_from_hf(url, filename=filename, download_dir=download_dir)
+    else:
+        filename = download_file_from_civitai(url, filename=filename, download_dir=download_dir) 
+
     if should_add_info:
         # Create and save download information
         download_info = create_download_info(url, filename)
@@ -95,15 +143,16 @@ def check_and_download_file(url, download_dir, filename=None):
 def main():
     # URL of the file to download
     # url = "https://huggingface.co/xinsir/controlnet-tile-sdxl-1.0/resolve/main/diffusion_pytorch_model.safetensors"
-    # url = "https://huggingface.co/xinsir/controlnet-tile-sdxl-1.0/resolve/main/.gitattributes"
-    url = "https://civitai.com/models/118025/360redmond-a-360-view-panorama-lora-for-sd-xl-10"
+    url = "https://huggingface.co/xinsir/controlnet-tile-sdxl-1.0/resolve/main/.gitattributes"
+    # url = "https://civitai.com/models/118025/360redmond-a-360-view-panorama-lora-for-sd-xl-10"
+    # url = "https://huggingface.co/black-forest-labs/FLUX.1-dev/resolve/main/flux1-dev.safetensors"
 
     # Set up download directory
     this_dir = os.path.dirname(os.path.abspath(__file__))
     download_dir = os.path.join(this_dir, "my_downloads", "controlnet")
 
     # Check if file exists, and download if necessary
-    filename = check_and_download_file(url, download_dir, filename='360redmond-a-360-view-panorama-lora-for-sd-xl-10.safetensors')
+    filename = check_and_download_file(url, download_dir, filename=None)
 
     print(f"\nFile processed: {filename}")
     print("Download information saved to download_info.json")
@@ -165,6 +214,6 @@ def main_redownload():
     print("Redownload process completed.")
 
 if __name__ == "__main__":
-    # main()
-    # main_clearspace()
+    main()
+    main_clearspace()
     main_redownload()
