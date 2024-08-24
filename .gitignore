@@ -2,3 +2,4 @@
 download_info.json
 my_downloads/
 *.safetensors
+.env

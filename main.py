@@ -2,7 +2,7 @@ import os
 import wget
 import json
 
-def download_file(url, filename=None, download_dir="downloads"):
+def download_file(url, filename=None , download_dir="downloads"):
     """Download a file from the given URL into a specific directory with a specific filename."""
     if filename is None:
         filename = os.path.basename(url)
@@ -60,9 +60,7 @@ def save_download_info(info, filename="download_info.json"):
         json.dump(existing_info, json_file, indent=4)
         json_file.truncate()
 
-def check_and_download_file(url, download_dir):
-    # Check if the URL has already been downloaded
-    # Check if download_info.json exists, if not create an empty file
+def check_and_download_file(url, download_dir, filename=None):
     if not os.path.exists("download_info.json"):
         with open("download_info.json", "w") as json_file:
             json.dump({}, json_file)
@@ -71,6 +69,8 @@ def check_and_download_file(url, download_dir):
         download_info = json.load(json_file)
 
     
+    should_add_info = True ## init to true
+
     for entry in download_info.values():
         if entry["url"] == url:
             local_filename = entry["local_filename"]
@@ -79,31 +79,92 @@ def check_and_download_file(url, download_dir):
                 return local_filename
             else:
                 print(f"File info found, but file missing. Re-downloading: {url}")
+                should_add_info = False
                 break
     
     # If we get here, either the URL wasn't found or the file was missing
-    filename = download_file(url, 'kak', download_dir=download_dir)
+    filename = download_file(url, filename=filename, download_dir=download_dir)
     
-    # Create and save download information
-    download_info = create_download_info(url, filename)
-    save_download_info(download_info)
+    if should_add_info:
+        # Create and save download information
+        download_info = create_download_info(url, filename)
+        save_download_info(download_info)
     
     return filename
 
 def main():
     # URL of the file to download
     # url = "https://huggingface.co/xinsir/controlnet-tile-sdxl-1.0/resolve/main/diffusion_pytorch_model.safetensors"
-    url = "https://huggingface.co/xinsir/controlnet-tile-sdxl-1.0/resolve/main/.gitattributes"
+    # url = "https://huggingface.co/xinsir/controlnet-tile-sdxl-1.0/resolve/main/.gitattributes"
+    url = "https://civitai.com/models/118025/360redmond-a-360-view-panorama-lora-for-sd-xl-10"
 
     # Set up download directory
     this_dir = os.path.dirname(os.path.abspath(__file__))
-    download_dir = os.path.join(this_dir, "my_downloads")
+    download_dir = os.path.join(this_dir, "my_downloads", "controlnet")
 
     # Check if file exists, and download if necessary
-    filename = check_and_download_file(url, download_dir)
+    filename = check_and_download_file(url, download_dir, filename='360redmond-a-360-view-panorama-lora-for-sd-xl-10.safetensors')
 
     print(f"\nFile processed: {filename}")
     print("Download information saved to download_info.json")
 
+def main_clearspace():
+    import json
+    import os
+
+    # Read the download_info.json file
+    with open("download_info.json", "r") as json_file:
+        download_info = json.load(json_file)
+
+    # Iterate through each entry in the download_info
+    for entry in download_info.values():
+        local_filename = entry.get("local_filename")
+        if local_filename and os.path.exists(local_filename):
+            try:
+                os.remove(local_filename)
+                print(f"Removed file: {local_filename}")
+            except OSError as e:
+                print(f"Error removing file {local_filename}: {e}")
+        elif local_filename:
+            print(f"File not found: {local_filename}")
+        else:
+            print("Local filename not found in entry")
+
+    print("Cleanup process completed.")
+
+def main_redownload():
+    import json
+    import os
+    from urllib.parse import urlparse
+
+    # Read the download_info.json file
+    with open("download_info.json", "r") as json_file:
+        download_info = json.load(json_file)
+
+    # Iterate through each entry in the download_info
+    for entry in download_info.values():
+        url = entry.get("url")
+        local_filename = entry.get("local_filename")
+        
+        if url and local_filename:
+            # Ensure the directory exists
+            os.makedirs(os.path.dirname(local_filename), exist_ok=True)
+            
+            # Extract the filename from the URL if not present in local_filename
+            if os.path.basename(local_filename) == "":
+                parsed_url = urlparse(url)
+                filename = os.path.basename(parsed_url.path)
+                local_filename = os.path.join(local_filename, filename)
+            
+            # Download the file
+            filename = check_and_download_file(url, os.path.dirname(local_filename), filename=os.path.basename(local_filename))
+            print(f"Redownloaded: {filename}")
+        else:
+            print(f"Skipping entry due to missing URL or local filename: {entry}")
+
+    print("Redownload process completed.")
+
 if __name__ == "__main__":
-    main()
+    # main()
+    # main_clearspace()
+    main_redownload()
