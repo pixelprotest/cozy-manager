@@ -6,7 +6,12 @@ from src.download import (download_file_from_hf,
 from src.info import (create_download_info, 
                       save_download_info)
 
-def check_and_download_file(url, download_dir, model_info_filepath, filename=None):
+def check_and_download_file(url, 
+                            download_dir, 
+                            model_info_filepath, 
+                            model_type,
+                            model_base,
+                            filename=None):
     if not os.path.exists(model_info_filepath):
         with open(model_info_filepath, "w") as json_file:
             json.dump({}, json_file)
@@ -37,7 +42,11 @@ def check_and_download_file(url, download_dir, model_info_filepath, filename=Non
 
     if should_add_info:
         # Create and save download information
-        download_info = create_download_info(url, filename, model_info_filepath)
+        download_info = create_download_info(url, 
+                                             filename, 
+                                             model_type,
+                                             model_base,
+                                             model_info_filepath)
         save_download_info(download_info, model_info_filepath)
     
     return filename

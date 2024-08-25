@@ -1,7 +1,11 @@
 import json
 import os
 
-def create_download_info(url, filename, json_filepath):
+def create_download_info(url, 
+                         filename, 
+                         model_type,
+                         model_base,
+                         json_filepath):
     """Create a dictionary with download information.
         imagine the url is https://huggingface.co/xinsir/controlnet-tile-sdxl-1.0/
                                     resolve/main/diffusion_pytorch_model.safetensors
@@ -33,6 +37,8 @@ def create_download_info(url, filename, json_filepath):
         "url": url,
         "local_filename": filename,
         "source_name": source_name,
+        "model_type": model_type,
+        "model_base": model_base,
         "file_size_mb": round(file_size_mb, 2)  # Round to 2 decimal places
     }
     

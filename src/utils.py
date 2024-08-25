@@ -18,6 +18,8 @@ def get_download_args():
 def get_clearup_args():
     parser = argparse.ArgumentParser(description="Clear up space.")
     parser.add_argument("--tag", type=str, default=None, help="Clear all files with this tag")
+    parser.add_argument("--model_type", type=str, default=None, help="Clear all files with this model type")
+    parser.add_argument("--model_base", type=str, default=None, help="Clear all files with this model base")
     return parser.parse_args()
 
 def log_into_huggingface():
