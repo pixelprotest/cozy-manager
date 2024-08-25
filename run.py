@@ -51,6 +51,7 @@ def clearup_space():
     # Iterate through each entry in the download_info
     for entry in download_info.values():
         local_filename = entry.get("local_filename")
+        local_filepath = get_absolute_model_filepath(storage_root_dir, local_filename)
         force_keep = entry.get("force_keep", False)
         tags = entry.get("tags", [])
         model_type = entry.get("model_type", None)
@@ -76,21 +77,21 @@ def clearup_space():
             print(f"Skipping {local_filename} due to force_keep flag")
             continue
         
-        if local_filename and os.path.exists(local_filename):
+        if local_filename and os.path.exists(local_filepath):
             try:
-                if os.path.isfile(local_filename):
-                    os.remove(local_filename)
+                if os.path.isfile(local_filepath):
+                    os.remove(local_filepath)
                     print(f"Removed file: {local_filename}")
-                elif os.path.isdir(local_filename):
+                elif os.path.isdir(local_filepath):
                     import shutil
-                    shutil.rmtree(local_filename)
+                    shutil.rmtree(local_filepath)
                     print(f"Removed directory: {local_filename}")
                 else:
                     print(f"Unknown file type: {local_filename}")
             except OSError as e:
                 print(f"Error removing {local_filename}: {e}")
         elif local_filename:
-            print(f"File not found: {local_filename}")
+            print(f"File not found: {local_filepath}")
         else:
             print("Local filename not found in entry")
 
@@ -106,26 +107,27 @@ def redownload_models():
     for entry in download_info.values():
         url = entry.get("url")
         local_filename = entry.get("local_filename")
+        local_filepath = get_absolute_model_filepath(storage_root_dir, local_filename)
         model_type = entry.get("model_type")
         model_base = entry.get("model_base")
         
         if url and local_filename:
             # Ensure the directory exists
-            os.makedirs(os.path.dirname(local_filename), exist_ok=True)
+            os.makedirs(os.path.dirname(local_filepath), exist_ok=True)
             
             # Extract the filename from the URL if not present in local_filename
             if os.path.basename(local_filename) == "":
                 parsed_url = urlparse(url)
                 filename = os.path.basename(parsed_url.path)
-                local_filename = os.path.join(local_filename, filename)
+                local_filename = os.path.join(local_filepath, filename)
             
             # Download the file
             filename = check_and_download_file(url, 
-                                               os.path.dirname(local_filename), 
+                                               os.path.dirname(local_filepath), 
                                                model_info_filepath,
                                                model_type=model_type,
                                                model_base=model_base,
-                                               filename=os.path.basename(local_filename))
+                                               filename=os.path.basename(local_filepath))
         else:
             print(f"Skipping entry due to missing URL or local filename: {entry}")
 

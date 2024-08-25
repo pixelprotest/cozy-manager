@@ -24,9 +24,10 @@ def check_and_download_file(url,
     for entry in download_info.values():
         if entry["url"] == url:
             local_filename = entry["local_filename"]
-            if os.path.exists(local_filename):
-                print(f"File already exists: {local_filename}")
-                return local_filename
+            local_filepath = get_absolute_model_filepath(download_dir, local_filename)
+            if os.path.exists(local_filepath):
+                print(f"File already exists: {local_filepath}")
+                return local_filepath
             else:
                 print(f"File info found, but file missing. Re-downloading: {url}")
                 should_add_info = False

@@ -25,6 +25,20 @@ def get_clearup_args():
 def log_into_huggingface():
     huggingface_hub.login(hf_token)
 
+def get_absolute_model_filepath(model_store_directory, local_filename):
+    """
+    Combines the model store directory and local filename to create an absolute filepath.
+
+    Args:
+    model_store_directory (str): The base directory where models are stored.
+    local_filename (str): The relative path and filename of the model.
+
+    Returns:
+    str: The absolute filepath of the model.
+    """
+    return os.path.join(model_store_directory, local_filename)
+
+
 def sanitize_and_validate_arg_input(arg_input, mapping_type):
     arg_input = arg_input.lower().strip()
     
