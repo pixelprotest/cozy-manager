@@ -1,17 +1,14 @@
-import huggingface_hub
 import os
-import wget
 import json
-import civitdl
-import subprocess
-import argparse
+from urllib.parse import urlparse
 from dotenv import load_dotenv
 from src.download import (download_file, 
                          download_file_from_hf, 
                          download_file_from_civitai)
 from src.info import (create_download_info,
                       save_download_info)
-from src.utils import sanitize_and_validate_arg_input
+from src.utils import (get_args, 
+                       sanitize_and_validate_arg_input)
 
 # Load environment variables from .env file
 load_dotenv()
@@ -20,58 +17,9 @@ civitai_api_key = os.getenv("CIVITAI_API_KEY")
 model_info_filepath = os.getenv("MODEL_INFO_FILE")
 storage_root_dir = os.environ.get("MODEL_STORAGE_DIR")
 
-def check_and_download_file(url, download_dir, model_info_filepath, filename=None):
-    if not os.path.exists(model_info_filepath):
-        with open(model_info_filepath, "w") as json_file:
-            json.dump({}, json_file)
-
-    with open(model_info_filepath, "r") as json_file:
-        download_info = json.load(json_file)
-
-    
-    should_add_info = True ## init to true
-
-    for entry in download_info.values():
-        if entry["url"] == url:
-            local_filename = entry["local_filename"]
-            if os.path.exists(local_filename):
-                print(f"File already exists: {local_filename}")
-                return local_filename
-            else:
-                print(f"File info found, but file missing. Re-downloading: {url}")
-                should_add_info = False
-                break
-    
-    # If we get here, either the URL wasn't found or the file was missing
-    if 'huggingface.co' in url:
-        filename = download_file_from_hf(url, filename=filename, download_dir=download_dir)
-    elif 'civitai.com' in url:
-        filename = download_file_from_civitai(url, filename=filename, download_dir=download_dir) 
-    else:
-        filename = download_file(url, filename=filename, download_dir=download_dir)
-
-    if should_add_info:
-        # Create and save download information
-        download_info = create_download_info(url, filename, model_info_filepath)
-        save_download_info(download_info, model_info_filepath)
-    
-    return filename
-
-def get_args():
-    parser = argparse.ArgumentParser(description="Download AI models from various sources.")
-    parser.add_argument("url", nargs='?', type=str, help="URL of the file to download")
-    parser.add_argument("model_type", nargs='?', type=str, help="e.g. controlnet, unet, checkpoint")
-    parser.add_argument("model_base", nargs='?', type=str, help="e.g. flux1, sdxl, sd15")
-    parser.add_argument("filename", nargs='?', type=str, help="Custom filename incase repo naming not clear enough")
-    parser.add_argument("--url", type=str, dest='url', help="URL of the file to download")
-    parser.add_argument("--model-type", dest='model_type', type=str, help="e.g. controlnet, unet, checkpoint")
-    parser.add_argument("--model-base", dest='model_base', type=str, default="flux1", help="e.g., flux1, sdxl, sd15")
-    parser.add_argument("--filename", dest='filename', type=str, default=None, help="Custom filename incase repo naming not clear enough")
-    args = parser.parse_args()
-    
-    return args
 
 def download_model():
+    """ Main entry point for downloading a model """
     args = get_args()
     # Set up download directory
     model_type = sanitize_and_validate_arg_input(args.model_type, 'model_type_names')
@@ -85,9 +33,7 @@ def download_model():
     print("Download information saved to download_info.json")
 
 def clearup_space():
-    import json
-    import os
-
+    """ Main entry point for cleaning up space """
     # Read the download_info.json file
     with open(model_info_filepath, "r") as json_file:
         download_info = json.load(json_file)
@@ -116,10 +62,7 @@ def clearup_space():
     print("Cleanup process completed.")
 
 def redownload_models():
-    import json
-    import os
-    from urllib.parse import urlparse
-
+    """ Main entry point for redownloading models """
     # Read the download_info.json file
     with open(model_info_filepath, "r") as json_file:
         download_info = json.load(json_file)

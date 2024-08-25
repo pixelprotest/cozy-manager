@@ -1,6 +1,19 @@
 import os
 import huggingface_hub
 import yaml
+import argparse
+
+def get_args():
+    parser = argparse.ArgumentParser(description="Download AI models from various sources.")
+    parser.add_argument("url", nargs='?', type=str, help="URL of the file to download")
+    parser.add_argument("model_type", nargs='?', type=str, help="e.g. controlnet, unet, checkpoint")
+    parser.add_argument("model_base", nargs='?', type=str, help="e.g. flux1, sdxl, sd15")
+    parser.add_argument("filename", nargs='?', type=str, help="Custom filename incase repo naming not clear enough")
+    parser.add_argument("--url", type=str, dest='url', help="URL of the file to download")
+    parser.add_argument("--model-type", dest='model_type', type=str, help="e.g. controlnet, unet, checkpoint")
+    parser.add_argument("--model-base", dest='model_base', type=str, default="flux1", help="e.g., flux1, sdxl, sd15")
+    parser.add_argument("--filename", dest='filename', type=str, default=None, help="Custom filename incase repo naming not clear enough")
+    return parser.parse_args()
 
 def log_into_huggingface():
     huggingface_hub.login(hf_token)
@@ -22,9 +35,3 @@ def sanitize_and_validate_arg_input(arg_input, mapping_type):
     raise ValueError(f"Invalid {error_type}: {model_input}. "
                      f"Please use one of the supported {error_type}s: {', '.join(mappings.keys())}, "
                      f"or add new ones to the config.yaml")
-
-def sanitize_and_validate_model_type(model_type):
-    return sanitize_and_validate_arg_input(model_type, 'model_type_names')
-
-def sanitize_and_validate_model_base(model_base):
-    return sanitize_and_validate_arg_input(model_base, 'model_base_names')
