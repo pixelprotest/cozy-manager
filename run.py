@@ -2,15 +2,10 @@ import os
 import json
 from urllib.parse import urlparse
 from dotenv import load_dotenv
-from src.download import (download_file, 
-                         download_file_from_hf, 
-                         download_file_from_civitai)
-from src.info import (create_download_info,
-                      save_download_info)
 from src.utils import (get_download_args, 
                        get_clearup_args, 
                        sanitize_and_validate_arg_input)
-from src.main import (check_and_download_file)
+from src.main import check_and_download_file
 
 # Load environment variables from .env file
 load_dotenv()
@@ -131,7 +126,6 @@ def redownload_models():
                                                model_type=model_type,
                                                model_base=model_base,
                                                filename=os.path.basename(local_filename))
-            print(f"Redownloaded: {filename}")
         else:
             print(f"Skipping entry due to missing URL or local filename: {entry}")
 
