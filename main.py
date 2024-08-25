@@ -58,13 +58,25 @@ def check_and_download_file(url, download_dir, model_info_filepath, filename=Non
 
 def get_args():
     parser = argparse.ArgumentParser(description="Download AI models from various sources.")
-    parser.add_argument("--model_type", type=str, default="controlnet", help="Type of the model (e.g., controlnet)")
-    parser.add_argument("--model_base", type=str, default="flux1", help="Base model name (e.g., flux1, sdxl, sd15)")
-    parser.add_argument("--url", type=str, required=True, help="URL of the file to download")
-    parser.add_argument("--filename", type=str, default=None, help="Custom filename for the downloaded file")
-    return parser.parse_args()
+    parser.add_argument("url", nargs='?', type=str, help="URL of the file to download")
+    parser.add_argument("model_type", nargs='?', type=str, help="e.g. controlnet, unet, checkpoint")
+    parser.add_argument("model_base", nargs='?', type=str, help="e.g. flux1, sdxl, sd15")
+    parser.add_argument("filename", nargs='?', type=str, help="Custom filename incase repo naming not clear enough")
+    parser.add_argument("--url", type=str, dest='url', help="URL of the file to download")
+    parser.add_argument("--model-type", dest='model_type', type=str, help="e.g. controlnet, unet, checkpoint")
+    parser.add_argument("--model-base", dest='model_base', type=str, default="flux1", help="e.g., flux1, sdxl, sd15")
+    parser.add_argument("--filename", dest='filename', type=str, default=None, help="Custom filename incase repo naming not clear enough")
+    args = parser.parse_args()
+    
+    return args
 
 def main():
+    # URL of the file to download
+    # url = "https://huggingface.co/xinsir/controlnet-tile-sdxl-1.0/resolve/main/diffusion_pytorch_model.safetensors"
+    # url = "https://huggingface.co/xinsir/controlnet-tile-sdxl-1.0/resolve/main/.gitattributes"
+    # url = "https://civitai.com/models/118025/360redmond-a-360-view-panorama-lora-for-sd-xl-10"
+    # url = "https://huggingface.co/black-forest-labs/FLUX.1-dev/resolve/main/flux1-dev.safetensors"
+
     args = get_args()
     # Set up download directory
     download_dir = os.path.join(storage_root_dir, args.model_type, args.model_base)
