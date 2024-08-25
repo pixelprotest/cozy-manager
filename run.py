@@ -9,6 +9,7 @@ from src.info import (create_download_info,
                       save_download_info)
 from src.utils import (get_args, 
                        sanitize_and_validate_arg_input)
+from src.main import (check_and_download_file)
 
 # Load environment variables from .env file
 load_dotenv()
@@ -41,6 +42,12 @@ def clearup_space():
     # Iterate through each entry in the download_info
     for entry in download_info.values():
         local_filename = entry.get("local_filename")
+        force_keep = entry.get("force_keep", False)
+        
+        if force_keep:
+            print(f"Skipping {local_filename} due to force_keep flag")
+            continue
+        
         if local_filename and os.path.exists(local_filename):
             try:
                 if os.path.isfile(local_filename):
