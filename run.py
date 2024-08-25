@@ -111,6 +111,8 @@ def redownload_models():
     for entry in download_info.values():
         url = entry.get("url")
         local_filename = entry.get("local_filename")
+        model_type = entry.get("model_type")
+        model_base = entry.get("model_base")
         
         if url and local_filename:
             # Ensure the directory exists
@@ -126,6 +128,8 @@ def redownload_models():
             filename = check_and_download_file(url, 
                                                os.path.dirname(local_filename), 
                                                model_info_filepath,
+                                               model_type=model_type,
+                                               model_base=model_base,
                                                filename=os.path.basename(local_filename))
             print(f"Redownloaded: {filename}")
         else:
