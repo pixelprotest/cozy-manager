@@ -4,158 +4,27 @@ import wget
 import json
 import civitdl
 import subprocess
+import argparse
 from dotenv import load_dotenv
+from src.download import (download_file, 
+                         download_file_from_hf, 
+                         download_file_from_civitai)
+from src.info import (create_download_info,
+                      save_download_info)
 
 # Load environment variables from .env file
 load_dotenv()
 hf_token = os.getenv("HF_TOKEN")
 civitai_api_key = os.getenv("CIVITAI_API_KEY")
+model_info_filepath = os.getenv("MODEL_INFO_FILE")
+storage_root_dir = os.environ.get("MODEL_STORAGE_DIR")
 
-def log_into_huggingface():
-    huggingface_hub.login(hf_token)
-
-def download_file(url, filename=None , download_dir="downloads"):
-    """Download a file from the given URL into a specific directory with a specific filename."""
-    if filename is None:
-        filename = os.path.basename(url)
-    
-    # Create the download directory if it doesn't exist
-    os.makedirs(download_dir, exist_ok=True)
-    
-    # Construct the full path for the downloaded file
-    full_path = os.path.join(download_dir, filename)
-    
-    # Download the file to the specified directory with the given filename
-    return wget.download(url, out=full_path)
-
-def download_file_from_hf(url, filename=None, download_dir="downloads"):
-    # Create the download directory if it doesn't exist
-    os.makedirs(download_dir, exist_ok=True)
-    
-    # If filename is not provided, use the last part of the URL
-    if filename is None:
-        filename = os.path.basename(url)
-    
-    # Construct the full path for the downloaded file
-    full_path = os.path.join(download_dir, filename)
-
-    repo_id = "/".join(url.split("/")[3:5]) ## extract repo_id from URL
-    filename_in_repo = "/".join(url.split("/")[7:]) ## extract filename from URL
-    # Download the file using huggingface_hub
-    huggingface_hub.hf_hub_download(
-        repo_id=repo_id,
-        filename=filename_in_repo,
-        local_dir=download_dir,
-        local_dir_use_symlinks=False
-    )
-    
-    ## now check fi the filename_in_repo is the same as the filename we wanted..
-    if filename!=filename_in_repo:
-        os.rename(os.path.join(download_dir, filename_in_repo), full_path)
-    
-    return full_path
-
-def download_file_from_civitai(url, filename=None, download_dir="downloads"):
-    # Create the download directory if it doesn't exist
-    os.makedirs(download_dir, exist_ok=True)
-
-
-    full_path = download_dir
-
-    # Use civitdl as a command-line process to download the file
-    try:
-        command = [
-            "civitdl",
-            url,
-            full_path,
-        ]
-        
-        result = subprocess.run(command, capture_output=True, text=True, check=True)
-        
-        if result.returncode == 0:
-            return full_path
-        else:
-            print(f"Error downloading file from Civitai: {result.stderr}")
-            return None
-    except subprocess.CalledProcessError as e:
-        print(f"Error running civitdl: {e}")
-        return None
-    except Exception as e:
-        print(f"Unexpected error downloading file from Civitai: {e}")
-        return None
-
-
-def create_download_info(url, filename):
-    """Create a dictionary with download information.
-        imagine the url is https://huggingface.co/xinsir/controlnet-tile-sdxl-1.0/
-                                    resolve/main/diffusion_pytorch_model.safetensors
-    """
-    # Read existing download_info.json to get the next available ID
-    try:
-        with open("download_info.json", "r") as json_file:
-            existing_info = json.load(json_file)
-        next_id = max(map(int, existing_info.keys())) + 1
-    except (FileNotFoundError, ValueError, json.JSONDecodeError):
-        existing_info = {}
-        next_id = 1
-
-    if 'civitai.com' in url:
-        source_name = "civitai"
-        # For Civitai downloads, we need to check the directory size
-        total_size = 0
-        for dirpath, dirnames, filenames in os.walk(filename):
-            for f in filenames:
-                fp = os.path.join(dirpath, f)
-                total_size += os.path.getsize(fp)
-        file_size_mb = total_size / (1024 * 1024)
-    else:
-        source_name = "huggingface"
-        # Get file size in megabytes
-        file_size_mb = os.path.getsize(filename) / (1024 * 1024)
-
-    new_info = {
-        "url": url,
-        "local_filename": filename,
-        "source_name": source_name,
-        "file_size_mb": round(file_size_mb, 2)  # Round to 2 decimal places
-    }
-    
-    if "huggingface.co" in url:
-        parts = url.split("/")
-        new_info["author"] = parts[3]
-        new_info["repo"] = parts[4]
-        new_info["filename_in_repo"] = parts[-1]
-    elif 'civitai.com' in url:
-        parts = url.split("/")
-        new_info["author"] = "unknown"
-        new_info["repo"] = "unknown"
-        new_info["filename_in_repo"] = "unknown"    
-
-    ## now add the new info with a new id 
-    existing_info[str(next_id)] = new_info
-
-    return existing_info
-
-def save_download_info(info, filename="download_info.json"):
-    """Save download information to a JSON file."""
-    with open(filename, "r+") as json_file:
-        try:
-            existing_info = json.load(json_file)
-        except json.JSONDecodeError:
-            existing_info = {}
-        
-        existing_info.update(info)
-        
-        json_file.seek(0)
-        json.dump(existing_info, json_file, indent=4)
-        json_file.truncate()
-
-def check_and_download_file(url, download_dir, filename=None):
-    if not os.path.exists("download_info.json"):
-        with open("download_info.json", "w") as json_file:
+def check_and_download_file(url, download_dir, model_info_filepath, filename=None):
+    if not os.path.exists(model_info_filepath):
+        with open(model_info_filepath, "w") as json_file:
             json.dump({}, json_file)
 
-    with open("download_info.json", "r") as json_file:
+    with open(model_info_filepath, "r") as json_file:
         download_info = json.load(json_file)
 
     
@@ -182,24 +51,26 @@ def check_and_download_file(url, download_dir, filename=None):
 
     if should_add_info:
         # Create and save download information
-        download_info = create_download_info(url, filename)
-        save_download_info(download_info)
+        download_info = create_download_info(url, filename, model_info_filepath)
+        save_download_info(download_info, model_info_filepath)
     
     return filename
 
-def main():
-    # URL of the file to download
-    # url = "https://huggingface.co/xinsir/controlnet-tile-sdxl-1.0/resolve/main/diffusion_pytorch_model.safetensors"
-    # url = "https://huggingface.co/xinsir/controlnet-tile-sdxl-1.0/resolve/main/.gitattributes"
-    url = "https://civitai.com/models/118025/360redmond-a-360-view-panorama-lora-for-sd-xl-10"
-    # url = "https://huggingface.co/black-forest-labs/FLUX.1-dev/resolve/main/flux1-dev.safetensors"
+def get_args():
+    parser = argparse.ArgumentParser(description="Download AI models from various sources.")
+    parser.add_argument("--model_type", type=str, default="controlnet", help="Type of the model (e.g., controlnet)")
+    parser.add_argument("--model_base", type=str, default="flux1", help="Base model name (e.g., flux1, sdxl, sd15)")
+    parser.add_argument("--url", type=str, required=True, help="URL of the file to download")
+    parser.add_argument("--filename", type=str, default=None, help="Custom filename for the downloaded file")
+    return parser.parse_args()
 
+def main():
+    args = get_args()
     # Set up download directory
-    this_dir = os.path.dirname(os.path.abspath(__file__))
-    download_dir = os.path.join(this_dir, "my_downloads", "controlnet")
+    download_dir = os.path.join(storage_root_dir, args.model_type, args.model_base)
 
     # Check if file exists, and download if necessary
-    filename = check_and_download_file(url, download_dir, filename=None)
+    filename = check_and_download_file(args.url, download_dir, model_info_filepath, filename=args.filename)
 
     print(f"\nFile processed: {filename}")
     print("Download information saved to download_info.json")
