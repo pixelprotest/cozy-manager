@@ -12,9 +12,9 @@ setup(
     ],
     entry_points={
         "console_scripts": [
-            "pp-manager-dl=run:download_model",
-            "pp-manager-clear=run:clearup_space",
-            "pp-manager-reload=run:redownload_models",
+            "cozy download=run:download_model",
+            "cozy clear=run:clearup_space",
+            "cozy reload=run:redownload_models",
         ],
     },
 )

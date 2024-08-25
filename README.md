@@ -1,4 +1,4 @@
-# AI Model Manager
+# Cozy Manager
 
 AI Model Manager is a tool for downloading and managing AI models from various sources, including Hugging Face and Civitai.
 
@@ -6,8 +6,8 @@ AI Model Manager is a tool for downloading and managing AI models from various s
 
 1. Clone this repository:
    ```
-   git clone https://github.com/pixelprotest/ai-model-manager.git
-   cd ai-model-manager
+   git clone https://github.com/pixelprotest/cozy-manager.git
+   cd cozy-manager 
    ```
 
 2. Install the package:
@@ -31,12 +31,12 @@ The AI Model Manager provides three main commands:
 
 To download a model, the basic command is:
 
-`pp-manager-dl <url> <model-type> <model-base-type> <optional filename>` 
+`cozy download <url> <model-type> <model-base-type> <optional filename>` 
 
 For example lets say we want to download a `sdxl` `lora` from civitai, 
 we can copy the url and download it on the cli like this:
 
-`pp-manager-dl https://civitai/path/to/lora/here lora sdxl`
+`cozy download https://civitai/path/to/lora/here lora sdxl`
 
 Or lets say we want to download the `flux1-dev` `ae.safetensors` file from huggingface.
 The original `ae.safetensors` filename is a bit ambiguous, so we can pass in a new name
@@ -50,10 +50,23 @@ The `model-type` and the `model-base-type` will create subdirectories in the `MO
 ### 2. Clear Up Space
 
 To remove all the downloaded models, we can run:
-`pp-manager-clear`
+`cozy clear`
 
 ### 3. Reload Models
 
 Since all the information of our previously downloaded models are stored in a json file, 
 we can redownload all the models by running:
-`pp-manager-reload`
+`cozy reload`
+
+### 4. Purge Models
+
+If you want to fully remove a model from both the storage and the json file, you can run:
+`cozy purge <id>`
+
+### 5. List Models
+
+`cozy list --all`
+
+`cozy list --local` ## shows the models that are currently stored locally
+
+`cozy list --virtual` ## show shte models that are not stored locally and only available 'virtually' in the json file
