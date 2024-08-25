@@ -4,3 +4,5 @@ my_downloads/
 *.safetensors
 .env
 .idea
+__pycache__/
+*.pyc
