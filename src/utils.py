@@ -7,6 +7,7 @@ load_dotenv()
 
 def get_download_args():
     parser = argparse.ArgumentParser(description="Download AI models from various sources.")
+    parser.add_argument("_cmd", help="entry command into the download function of the cozy manager")
     parser.add_argument("url", nargs='?', type=str, help="URL of the file to download")
     parser.add_argument("model_type", nargs='?', type=str, help="e.g. controlnet, unet, checkpoint")
     parser.add_argument("model_base", nargs='?', type=str, help="e.g. flux1, sdxl, sd15")
@@ -19,6 +20,7 @@ def get_download_args():
 
 def get_clearup_args():
     parser = argparse.ArgumentParser(description="Clear up space.")
+    parser.add_argument("_cmd", help="entry command into the clearup function of the cozy manager")
     parser.add_argument("--tag", type=str, default=None, help="Clear all files with this tag")
     parser.add_argument("--model_type", type=str, default=None, help="Clear all files with this model type")
     parser.add_argument("--model_base", type=str, default=None, help="Clear all files with this model base")

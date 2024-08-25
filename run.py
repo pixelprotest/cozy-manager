@@ -1,3 +1,4 @@
+import sys
 import os
 import json
 from urllib.parse import urlparse
@@ -133,3 +134,26 @@ def redownload_models():
             print(f"Skipping entry due to missing URL or local filename: {entry}")
 
     print("Redownload process completed.")
+
+def get_cozy_command():
+    if len(sys.argv) < 2:
+        print("--- Missing an actionable command" )
+        print("--- Usage:")
+        print("--- > cozy <download|clear|reload> ... etc")
+        sys.exit(1)
+
+    cmd = sys.argv[1]
+    return cmd
+
+def main():
+    cmd = get_cozy_command()
+
+    if cmd=="download":
+        download_model()
+    elif cmd=="clear":
+        clearup_space()
+    elif cmd=="reload":
+        redownload_models()
+    else:
+        print(f"Unknown command: {cmd}")
+        sys.exit(1)

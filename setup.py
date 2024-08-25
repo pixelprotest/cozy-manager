@@ -12,9 +12,7 @@ setup(
     ],
     entry_points={
         "console_scripts": [
-            "cozy download=run:download_model",
-            "cozy clear=run:clearup_space",
-            "cozy reload=run:redownload_models",
+            "cozy=run:main",
         ],
     },
 )
