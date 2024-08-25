@@ -1,29 +1,30 @@
 import json
 import os
+from src.utils import get_absolute_model_filepath
 
 def create_download_info(url, 
                          filename, 
                          model_type,
                          model_base,
-                         json_filepath):
-    """Create a dictionary with download information.
-        imagine the url is https://huggingface.co/xinsir/controlnet-tile-sdxl-1.0/
-                                    resolve/main/diffusion_pytorch_model.safetensors
+                         db_filepath):
+    """
     """
     # Read existing download_info.json to get the next available ID
     try:
-        with open(json_filepath, "r") as json_file:
+        with open(db_filepath, "r") as json_file:
             existing_info = json.load(json_file)
         next_id = max(map(int, existing_info.keys())) + 1
     except (FileNotFoundError, ValueError, json.JSONDecodeError):
         existing_info = {}
         next_id = 1
 
+    filepath = get_absolute_model_filepath(filename, model_type, model_base)
+
     if 'civitai.com' in url:
         source_name = "civitai"
         # For Civitai downloads, we need to check the directory size
         total_size = 0
-        for dirpath, dirnames, filenames in os.walk(filename):
+        for dirpath, dirnames, filenames in os.walk(filepath):
             for f in filenames:
                 fp = os.path.join(dirpath, f)
                 total_size += os.path.getsize(fp)
@@ -31,7 +32,7 @@ def create_download_info(url,
     else:
         source_name = "huggingface"
         # Get file size in megabytes
-        file_size_mb = os.path.getsize(filename) / (1024 * 1024)
+        file_size_mb = os.path.getsize(filepath) / (1024 * 1024)
 
     new_info = {
         "url": url,

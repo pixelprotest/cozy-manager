@@ -4,14 +4,15 @@ from urllib.parse import urlparse
 from dotenv import load_dotenv
 from src.utils import (get_download_args, 
                        get_clearup_args, 
-                       sanitize_and_validate_arg_input)
+                       sanitize_and_validate_arg_input,
+                       get_absolute_model_filepath)
 from src.main import check_and_download_file
 
 # Load environment variables from .env file
 load_dotenv()
 hf_token = os.getenv("HF_TOKEN")
 civitai_api_key = os.getenv("CIVITAI_API_KEY")
-model_info_filepath = os.getenv("MODEL_INFO_FILE")
+db_filepath = os.getenv("MODEL_INFO_FILE")
 storage_root_dir = os.environ.get("MODEL_STORAGE_DIR")
 
 
@@ -26,7 +27,7 @@ def download_model():
     # Check if file exists, and download if necessary
     filename = check_and_download_file(args.url, 
                                        download_dir, 
-                                       model_info_filepath, 
+                                       db_filepath, 
                                        model_type=model_type, 
                                        model_base=model_base,
                                        filename=args.filename)
@@ -45,17 +46,17 @@ def clearup_space():
         clear_model_base = sanitize_and_validate_arg_input(args.model_base, 'model_base_names')
 
     # Read the download_info.json file
-    with open(model_info_filepath, "r") as json_file:
+    with open(db_filepath, "r") as json_file:
         download_info = json.load(json_file)
 
     # Iterate through each entry in the download_info
     for entry in download_info.values():
         local_filename = entry.get("local_filename")
-        local_filepath = get_absolute_model_filepath(storage_root_dir, local_filename)
         force_keep = entry.get("force_keep", False)
         tags = entry.get("tags", [])
         model_type = entry.get("model_type", None)
         model_base = entry.get("model_base", None)
+        local_filepath = get_absolute_model_filepath(local_filename, model_type, model_base)
 
         ## if we passed in a specific tag, and the entry has a tag
         if args.tag:
@@ -100,16 +101,16 @@ def clearup_space():
 def redownload_models():
     """ Main entry point for redownloading models """
     # Read the download_info.json file
-    with open(model_info_filepath, "r") as json_file:
+    with open(db_filepath, "r") as json_file:
         download_info = json.load(json_file)
 
     # Iterate through each entry in the download_info
     for entry in download_info.values():
         url = entry.get("url")
         local_filename = entry.get("local_filename")
-        local_filepath = get_absolute_model_filepath(storage_root_dir, local_filename)
         model_type = entry.get("model_type")
         model_base = entry.get("model_base")
+        local_filepath = get_absolute_model_filepath(local_filename, model_type, model_base)
         
         if url and local_filename:
             # Ensure the directory exists
@@ -124,7 +125,7 @@ def redownload_models():
             # Download the file
             filename = check_and_download_file(url, 
                                                os.path.dirname(local_filepath), 
-                                               model_info_filepath,
+                                               db_filepath,
                                                model_type=model_type,
                                                model_base=model_base,
                                                filename=os.path.basename(local_filepath))

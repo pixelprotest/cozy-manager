@@ -81,8 +81,9 @@ def download_file_from_civitai(url, filename=None, download_dir="downloads"):
                 if new_model_dirname:
                     # If a new directory was created, update the full_path
                     full_path = os.path.join(download_dir, new_model_dirname[0])
+                    dirname = new_model_dirname[0]
                     print(f"New directory created: {full_path}")
-                    return new_model_dirname[0]
+                    return dirname 
                 else:
                     print("No new directory was created during download.")
             except Exception as e:

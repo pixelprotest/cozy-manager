@@ -5,6 +5,7 @@ from src.download import (download_file_from_hf,
                           download_file)
 from src.info import (create_download_info, 
                       save_download_info)
+from src.utils import get_absolute_model_filepath
 
 def check_and_download_file(url, 
                             download_dir, 
@@ -20,11 +21,11 @@ def check_and_download_file(url,
         download_info = json.load(json_file)
     
     should_add_info = True ## init to true
-
+    ## here we check if the file already exists, so we can bypass the download
     for entry in download_info.values():
         if entry["url"] == url:
             local_filename = entry["local_filename"]
-            local_filepath = get_absolute_model_filepath(download_dir, local_filename)
+            local_filepath = get_absolute_model_filepath(local_filename, model_type, model_base)
             if os.path.exists(local_filepath):
                 print(f"File already exists: {local_filepath}")
                 return local_filepath
