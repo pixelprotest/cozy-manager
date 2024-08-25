@@ -1,3 +1,22 @@
+model_base_names:
+  flux1:
+    - flux1
+    - flux
+    - flux-1
+    - flux_1
+  sdxl:
+    - sdxl
+    - sd-xl
+    - sd_xl
+    - stable-diffusion-xl
+    - stablediffusionxl
+  sd15:
+    - sd15
+    - sd-15
+    - sd_15
+    - stable-diffusion-1.5
+    - stablediffusion15
+
 model_type_names:
   loras:
     - lora
