@@ -28,23 +28,12 @@ def log_into_huggingface():
     huggingface_hub.login(hf_token)
 
 def get_absolute_model_filepath(filename, model_type, model_base):
-    """
-    Combines the model store directory and local filename to create an absolute filepath.
-
-    Args:
-    model_store_directory (str): The base directory where models are stored.
-    local_filename (str): The relative path and filename of the model.
-
-    Returns:
-    str: The absolute filepath of the model.
-    """
     model_store_directory = os.getenv("MODEL_STORAGE_DIR")
 
     if model_type:
         model_type = sanitize_and_validate_arg_input(model_type, 'model_type_names')
     if model_base:
         model_base = sanitize_and_validate_arg_input(model_base, 'model_base_names')
-
 
     return os.path.join(model_store_directory, model_type, model_base, filename)
 
