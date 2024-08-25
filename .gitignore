@@ -7,3 +7,4 @@ my_downloads/
 __pycache__/
 *.pyc
 *.json
+/*.egg-info/
