@@ -3,7 +3,7 @@ import huggingface_hub
 import yaml
 import argparse
 
-def get_args():
+def get_download_args():
     parser = argparse.ArgumentParser(description="Download AI models from various sources.")
     parser.add_argument("url", nargs='?', type=str, help="URL of the file to download")
     parser.add_argument("model_type", nargs='?', type=str, help="e.g. controlnet, unet, checkpoint")
@@ -13,6 +13,11 @@ def get_args():
     parser.add_argument("--model-type", dest='model_type', type=str, help="e.g. controlnet, unet, checkpoint")
     parser.add_argument("--model-base", dest='model_base', type=str, default="flux1", help="e.g., flux1, sdxl, sd15")
     parser.add_argument("--filename", dest='filename', type=str, default=None, help="Custom filename incase repo naming not clear enough")
+    return parser.parse_args()
+
+def get_clearup_args():
+    parser = argparse.ArgumentParser(description="Clear up space.")
+    parser.add_argument("--tag", type=str, default=None, help="Clear all files with this tag")
     return parser.parse_args()
 
 def log_into_huggingface():

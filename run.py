@@ -7,7 +7,8 @@ from src.download import (download_file,
                          download_file_from_civitai)
 from src.info import (create_download_info,
                       save_download_info)
-from src.utils import (get_args, 
+from src.utils import (get_download_args, 
+                       get_clearup_args, 
                        sanitize_and_validate_arg_input)
 from src.main import (check_and_download_file)
 
@@ -21,7 +22,7 @@ storage_root_dir = os.environ.get("MODEL_STORAGE_DIR")
 
 def download_model():
     """ Main entry point for downloading a model """
-    args = get_args()
+    args = get_download_args()
     # Set up download directory
     model_type = sanitize_and_validate_arg_input(args.model_type, 'model_type_names')
     model_base = sanitize_and_validate_arg_input(args.model_base, 'model_base_names')
@@ -35,6 +36,8 @@ def download_model():
 
 def clearup_space():
     """ Main entry point for cleaning up space """
+    args = get_clearup_args()
+
     # Read the download_info.json file
     with open(model_info_filepath, "r") as json_file:
         download_info = json.load(json_file)
@@ -43,8 +46,17 @@ def clearup_space():
     for entry in download_info.values():
         local_filename = entry.get("local_filename")
         force_keep = entry.get("force_keep", False)
+        tags = entry.get("tags", [])
+
+        ## if we passed in a specific tag, and the entry has a tag
+        if args.tag:
+            if args.tag not in tags:
+                ## then we can skip this file
+                continue
         
+        ## if we passed in a force_keep flag, and the entry has a force_keep flag
         if force_keep:
+            ## then we can skip this file
             print(f"Skipping {local_filename} due to force_keep flag")
             continue
         
