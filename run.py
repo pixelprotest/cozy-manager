@@ -11,6 +11,7 @@ from src.download import (download_file,
                          download_file_from_civitai)
 from src.info import (create_download_info,
                       save_download_info)
+from src.utils import sanitize_and_validate_model_type
 
 # Load environment variables from .env file
 load_dotenv()
@@ -76,10 +77,12 @@ def download_model():
     # url = "https://huggingface.co/xinsir/controlnet-tile-sdxl-1.0/resolve/main/.gitattributes"
     # url = "https://civitai.com/models/118025/360redmond-a-360-view-panorama-lora-for-sd-xl-10"
     # url = "https://huggingface.co/black-forest-labs/FLUX.1-dev/resolve/main/flux1-dev.safetensors"
+    # url = "https://huggingface.co/black-forest-labs/FLUX.1-dev/resolve/main/ae.safetensors "
 
     args = get_args()
     # Set up download directory
-    download_dir = os.path.join(storage_root_dir, args.model_type, args.model_base)
+    model_type = sanitize_and_validate_model_type(args.model_type)
+    download_dir = os.path.join(storage_root_dir, model_type, args.model_base)
 
     # Check if file exists, and download if necessary
     filename = check_and_download_file(args.url, download_dir, model_info_filepath, filename=args.filename)

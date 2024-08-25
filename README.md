@@ -30,15 +30,18 @@ The AI Model Manager provides three main commands:
 ### 1. Download a model
 
 To download a model, the basic command is:
+
 `pp-manager-dl <url> <model-type> <model-base-type> <optional filename>` 
 
 For example lets say we want to download a `sdxl` `lora` from civitai, 
 we can copy the url and download it on the cli like this:
+
 `pp-manager-dl https://civitai/path/to/lora/here lora sdxl`
 
 Or lets say we want to download the `flux1-dev` `ae.safetensors` file from huggingface.
 The original `ae.safetensors` filename is a bit ambiguous, so we can pass in a new name
 to store it like `flux1-dev-ae.safetensors`
+
 `pp-manager-dl https://huggingface.co/black-forest-labs/FLUX.1-dev/blob/main/ae.safetensors vae flux1 flux1-dev-ae.safetensors`
 
 The `model-type` and the `model-base-type` will create subdirectories in the `MODEL_STORAGE_DIR`

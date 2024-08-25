@@ -1,0 +1,37 @@
+model_type_names:
+  loras:
+    - lora
+    - loras
+    - loramodel
+    - loramodels
+  checkpoints:
+    - checkpoint
+    - checkpoints
+    - ckpt
+    - ckpts
+    - model
+    - models
+  controlnet:
+    - controlnet
+    - control
+    - cn
+  vae:
+    - vae
+    - autoencoder
+    - ae
+  unet:
+    - unet
+    - u-net
+  textualinversion:
+    - textualinversion
+    - ti
+    - embedding
+    - embeddings
+  hypernetwork:
+    - hypernetwork
+    - hypernet
+    - hyper
+  upscaler:
+    - upscaler
+    - upscale
+    - upscaling
