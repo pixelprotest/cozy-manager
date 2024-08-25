@@ -70,7 +70,7 @@ def get_args():
     
     return args
 
-def main():
+def download_model():
     # URL of the file to download
     # url = "https://huggingface.co/xinsir/controlnet-tile-sdxl-1.0/resolve/main/diffusion_pytorch_model.safetensors"
     # url = "https://huggingface.co/xinsir/controlnet-tile-sdxl-1.0/resolve/main/.gitattributes"
@@ -87,7 +87,7 @@ def main():
     print(f"\nFile processed: {filename}")
     print("Download information saved to download_info.json")
 
-def main_clearspace():
+def clearup_space():
     import json
     import os
 
@@ -111,7 +111,7 @@ def main_clearspace():
 
     print("Cleanup process completed.")
 
-def main_redownload():
+def redownload_models():
     import json
     import os
     from urllib.parse import urlparse
