@@ -92,7 +92,7 @@ def clearup_space():
     import os
 
     # Read the download_info.json file
-    with open("download_info.json", "r") as json_file:
+    with open(model_info_filepath, "r") as json_file:
         download_info = json.load(json_file)
 
     # Iterate through each entry in the download_info
@@ -100,10 +100,17 @@ def clearup_space():
         local_filename = entry.get("local_filename")
         if local_filename and os.path.exists(local_filename):
             try:
-                os.remove(local_filename)
-                print(f"Removed file: {local_filename}")
+                if os.path.isfile(local_filename):
+                    os.remove(local_filename)
+                    print(f"Removed file: {local_filename}")
+                elif os.path.isdir(local_filename):
+                    import shutil
+                    shutil.rmtree(local_filename)
+                    print(f"Removed directory: {local_filename}")
+                else:
+                    print(f"Unknown file type: {local_filename}")
             except OSError as e:
-                print(f"Error removing file {local_filename}: {e}")
+                print(f"Error removing {local_filename}: {e}")
         elif local_filename:
             print(f"File not found: {local_filename}")
         else:
@@ -117,7 +124,7 @@ def redownload_models():
     from urllib.parse import urlparse
 
     # Read the download_info.json file
-    with open("download_info.json", "r") as json_file:
+    with open(model_info_filepath, "r") as json_file:
         download_info = json.load(json_file)
 
     # Iterate through each entry in the download_info
@@ -136,14 +143,12 @@ def redownload_models():
                 local_filename = os.path.join(local_filename, filename)
             
             # Download the file
-            filename = check_and_download_file(url, os.path.dirname(local_filename), filename=os.path.basename(local_filename))
+            filename = check_and_download_file(url, 
+                                               os.path.dirname(local_filename), 
+                                               model_info_filepath,
+                                               filename=os.path.basename(local_filename))
             print(f"Redownloaded: {filename}")
         else:
             print(f"Skipping entry due to missing URL or local filename: {entry}")
 
     print("Redownload process completed.")
-
-if __name__ == "__main__":
-    main()
-    # main_clearspace()
-    # main_redownload()
