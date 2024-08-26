@@ -5,7 +5,8 @@ from src.cmds import (download_model,
                        clearup_space,
                        redownload_models,
                        list_models,
-                       purge_model)
+                       purge_model, 
+                       tag_model)
 
 # Load environment variables from .env file
 load_dotenv()
@@ -20,7 +21,8 @@ cmd_map = {
     "clear": clearup_space,
     "reload": redownload_models,
     "list": list_models,
-    "purge": purge_model
+    "purge": purge_model,
+    "tag": tag_model
 }
 
 def get_cozy_command():

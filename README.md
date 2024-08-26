@@ -52,6 +52,10 @@ The `model-type` and the `model-base-type` will create subdirectories in the `MO
 To remove all the downloaded models, we can run:
 `cozy clear`
 
+To remove all the models with a specific tag, we can run:
+
+`cozy clear --tag <tag>`
+
 ### 3. Reload Models
 
 Since all the information of our previously downloaded models are stored in a json file, 
@@ -72,3 +76,9 @@ If you want to fully remove a model from both the storage and the json file, you
 `cozy list --virtual` ## show shte models that are not stored locally and only available 'virtually' in the json file
 
 `cozy list --data` ## shows the size of the models stored locally
+
+### 6. Tag Models
+
+`cozy tag <id> <tag>` ## tags a model with a given tag
+
+`cozy tag <id> --remove <tag>` ## removes a tag from a model
