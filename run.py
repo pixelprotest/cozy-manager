@@ -1,18 +1,11 @@
 import sys
 import os
-import json
-from urllib.parse import urlparse
 from dotenv import load_dotenv
-from src.utils import (get_download_args, 
-                       get_clearup_args, 
-                       get_list_args,
-                       sanitize_and_validate_arg_input,
-                       get_absolute_model_filepath)
-from src.main import check_and_download_file
 from src.cmds import (download_model,
                        clearup_space,
                        redownload_models,
-                       list_models)
+                       list_models,
+                       purge_model)
 
 # Load environment variables from .env file
 load_dotenv()
@@ -26,7 +19,8 @@ cmd_map = {
     "download": download_model,
     "clear": clearup_space,
     "reload": redownload_models,
-    "list": list_models
+    "list": list_models,
+    "purge": purge_model
 }
 
 def get_cozy_command():

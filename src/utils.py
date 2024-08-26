@@ -36,6 +36,13 @@ def get_list_args():
     parser.add_argument("--model-base", type=str, help="Filter models by model base")
 
     return parser.parse_args()
+def get_purge_args():
+    parser = argparse.ArgumentParser(description="Purge a model from storage and database.")
+    parser.add_argument("_cmd", help="entry command into the purge function of the cozy manager")
+    parser.add_argument("id", type=str, help="ID of the model to purge")
+    parser.add_argument("--force", action="store_true", help="Force purge without confirmation")
+    return parser.parse_args()
+
 
 
 def log_into_huggingface():

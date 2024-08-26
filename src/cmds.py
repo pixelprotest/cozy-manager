@@ -4,8 +4,9 @@ from urllib.parse import urlparse
 from src.utils import (get_download_args, 
                        get_clearup_args, 
                        get_list_args, 
+                       get_purge_args,
                        sanitize_and_validate_arg_input, 
-                       get_absolute_model_filepath)
+                       get_absolute_model_filepath) 
 from src.main import check_and_download_file
 from dotenv import load_dotenv
 load_dotenv()
@@ -130,6 +131,52 @@ def redownload_models():
             print(f"Skipping entry due to missing URL or local filename: {entry}")
 
     print("Redownload process completed.")
+
+def purge_model():
+    """ Main entry point for purging a model """
+    args = get_purge_args()
+    # Load the JSON file
+    with open(db_filepath, "r") as f:
+        download_info = json.load(f)
+
+    # Check if the ID exists in the download_info
+    if args.id not in download_info:
+        print(f"Error: Model with ID '{args.id}' not found.")
+        return
+
+    # Get the model information
+    model_info = download_info[args.id]
+    local_filename = model_info.get('local_filename')
+    model_type = model_info.get('model_type')
+    model_base = model_info.get('model_base')
+
+    # Confirm deletion if --force is not used
+    if not args.force:
+        confirm = input(f"Are you sure you want to purge model '{args.id}'? This action cannot be undone. (y/N): ")
+        if confirm.lower() != 'y':
+            print("Purge cancelled.")
+            return
+
+    # Remove the file if it exists
+    if local_filename:
+        local_filepath = get_absolute_model_filepath(local_filename, model_type, model_base)
+        if os.path.exists(local_filepath):
+            try:
+                os.remove(local_filepath)
+                print(f"File '{local_filepath}' has been removed.")
+            except OSError as e:
+                print(f"Error removing file: {e}")
+        else:
+            print(f"File '{local_filepath}' not found.")
+
+    # Remove the entry from the JSON file
+    del download_info[args.id]
+
+    # Save the updated JSON file
+    with open(db_filepath, "w") as f:
+        json.dump(download_info, f, indent=4)
+
+    print(f"Model '{args.id}' has been purged from the database.")
 
 def list_models():
     """ Main entry point for listing models """
