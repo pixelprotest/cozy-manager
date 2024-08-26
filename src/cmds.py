@@ -164,13 +164,29 @@ def list_models():
 
     elif args.model_type:
         model_type = sanitize_and_validate_arg_input(args.model_type, 'model_type_names')
-        for id, entry in download_info.items():
-            if entry.get('model_type') == model_type:
-                print(f"ID: {id}")
-                print(f"URL: {entry.get('url', 'N/A')}")
-                print(f"Local Filename: {entry.get('local_filename', 'N/A')}")
-                print(f"Model Base: {entry.get('model_base', 'N/A')}")
-                print(f"Download Date: {entry.get('download_date', 'N/A')}")
-                print("-" * 40)
+        matching_models = [entry for entry in download_info.values() if entry.get('model_type') == model_type]
+        print("-" * 40)
+        print(f"Found {len(matching_models)} models for model type '{model_type}':")
+        print("-" * 40)
+        for entry in matching_models:
+            print(f"ID: {entry.get('id', 'N/A')}")
+            print(f"URL: {entry.get('url', 'N/A')}")
+            print(f"Local Filename: {entry.get('local_filename', 'N/A')}")
+            print(f"Model Base: {entry.get('model_base', 'N/A')}")
+            print(f"Download Date: {entry.get('download_date', 'N/A')}")
+            print("-" * 40)
+    elif args.model_base:
+        model_base = sanitize_and_validate_arg_input(args.model_base, 'model_base_names')
+        matching_models = [entry for entry in download_info.values() if entry.get('model_base') == model_base]
+        print("-" * 40)
+        print(f"Found {len(matching_models)} models for model base '{model_base}':")
+        print("-" * 40)
+        for entry in matching_models:
+            print(f"ID: {entry.get('id', 'N/A')}")
+            print(f"URL: {entry.get('url', 'N/A')}")
+            print(f"Local Filename: {entry.get('local_filename', 'N/A')}")
+            print(f"Model Type: {entry.get('model_type', 'N/A')}")
+            print(f"Download Date: {entry.get('download_date', 'N/A')}")
+            print("-" * 40)
     else:
         print("Please specify --all to list all models.")
