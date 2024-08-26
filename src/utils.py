@@ -32,6 +32,9 @@ def get_list_args():
     parser.add_argument("--all", action="store_true", help="List all models")
     parser.add_argument("--local", action="store_true", help="List local models")
     parser.add_argument("--virtual", action="store_true", help="List virtual models")
+    parser.add_argument("--model-type", type=str, help="Filter models by model type")
+    parser.add_argument("--model-base", type=str, help="Filter models by model base")
+
     return parser.parse_args()
 
 

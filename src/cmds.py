@@ -147,5 +147,30 @@ def list_models():
             print(f"Model Base: {entry.get('model_base', 'N/A')}")
             print(f"Download Date: {entry.get('download_date', 'N/A')}")
             print("-" * 40)
+    elif args.local:
+        for id, entry in download_info.items():
+            local_filename = entry.get('local_filename', 'N/A')
+            model_type = entry.get('model_type', 'N/A')
+            model_base = entry.get('model_base', 'N/A')
+            local_filepath = get_absolute_model_filepath(local_filename, model_type, model_base)
+            
+            if os.path.exists(local_filepath):
+                print(f"ID: {id}")
+                print(f"Local Filename: {local_filename}")
+                print(f"Model Type: {model_type}")
+                print(f"Model Base: {model_base}")
+                print(f"File Size: {os.path.getsize(local_filepath) / (1024 * 1024):.2f} MB")
+                print("-" * 40)
+
+    elif args.model_type:
+        model_type = sanitize_and_validate_arg_input(args.model_type, 'model_type_names')
+        for id, entry in download_info.items():
+            if entry.get('model_type') == model_type:
+                print(f"ID: {id}")
+                print(f"URL: {entry.get('url', 'N/A')}")
+                print(f"Local Filename: {entry.get('local_filename', 'N/A')}")
+                print(f"Model Base: {entry.get('model_base', 'N/A')}")
+                print(f"Download Date: {entry.get('download_date', 'N/A')}")
+                print("-" * 40)
     else:
         print("Please specify --all to list all models.")
