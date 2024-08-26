@@ -34,7 +34,7 @@ def get_list_args():
     parser.add_argument("--virtual", action="store_true", help="List virtual models")
     parser.add_argument("--model-type", type=str, help="Filter models by model type")
     parser.add_argument("--model-base", type=str, help="Filter models by model base")
-
+    parser.add_argument("--data-size", action="store_true", help="Show the size of the models stored locally")
     return parser.parse_args()
 def get_purge_args():
     parser = argparse.ArgumentParser(description="Purge a model from storage and database.")

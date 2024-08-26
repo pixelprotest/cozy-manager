@@ -70,3 +70,5 @@ If you want to fully remove a model from both the storage and the json file, you
 `cozy list --local` ## shows the models that are currently stored locally
 
 `cozy list --virtual` ## show shte models that are not stored locally and only available 'virtually' in the json file
+
+`cozy list --data` ## shows the size of the models stored locally

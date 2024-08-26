@@ -235,5 +235,16 @@ def list_models():
             print(f"Model Type: {entry.get('model_type', 'N/A')}")
             print(f"Download Date: {entry.get('download_date', 'N/A')}")
             print("-" * 40)
+    elif args.data_size:
+        print("Calculating the size of the models stored locally...")
+        total_size = 0
+        for entry in download_info.values():
+            local_filename = entry.get('local_filename', 'N/A')
+            model_type = entry.get('model_type', 'N/A')
+            model_base = entry.get('model_base', 'N/A')
+            local_filepath = get_absolute_model_filepath(local_filename, model_type, model_base)
+            if os.path.exists(local_filepath):
+                total_size += os.path.getsize(local_filepath)
+        print(f"Total size of models stored locally: {total_size / (1024 * 1024):.2f} MB")
     else:
         print("Please specify --all to list all models.")

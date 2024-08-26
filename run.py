@@ -45,5 +45,4 @@ def get_cozy_command():
     return cmd_handle
 
 def main():
-    cmd = get_cozy_command()
-    cmd()
+    get_cozy_command()()
