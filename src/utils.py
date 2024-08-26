@@ -26,6 +26,15 @@ def get_clearup_args():
     parser.add_argument("--model_base", type=str, default=None, help="Clear all files with this model base")
     return parser.parse_args()
 
+def get_list_args():
+    parser = argparse.ArgumentParser(description="List models.")
+    parser.add_argument("_cmd", help="entry command into the list function of the cozy manager")
+    parser.add_argument("--all", action="store_true", help="List all models")
+    parser.add_argument("--local", action="store_true", help="List local models")
+    parser.add_argument("--virtual", action="store_true", help="List virtual models")
+    return parser.parse_args()
+
+
 def log_into_huggingface():
     huggingface_hub.login(hf_token)
 
@@ -57,3 +66,4 @@ def sanitize_and_validate_arg_input(arg_input, mapping_type):
     raise ValueError(f"Invalid {error_type}: {model_input}. "
                      f"Please use one of the supported {error_type}s: {', '.join(mappings.keys())}, "
                      f"or add new ones to the config.yaml")
+
