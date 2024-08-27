@@ -1,6 +1,21 @@
-# Cozy Manager
+# Cozy AI Model Manager
 
-AI Model Manager is a tool for downloading and managing AI models from various sources, including Hugging Face and Civitai.
+Cozy AI Model Manager is a command line tool for managing your AI Model Collection.
+
+Key features:
+- Keep track of your entire model collection, never having to manually download the same model twice.
+- Simple command to deploy your model collection on new machines.
+- Automatically renames ambiguous model names to descriptive names based on repo:
+
+   e.g. `https://huggingface.co/pixelprotest/monkey-island-flux-lora/resolve/main/diffusion_pytorch_model.safetensors`
+
+   e.g. `diffusion_pytorch_model.safetensors` becomes `monkey-island-flux-lora.safetensors`
+- Organizes your models in sub directories based on `model type` and `model base`:
+
+   e.g. `model_store/lora/flux1/monkey-island-flux-lora.safetensors`
+
+- Free up diskspace and save money on paying for GBs of persistent cloud storage.
+- Download from multiple sources, including Hugging Face and Civitai.
 
 ## Installation
 
@@ -23,15 +38,33 @@ AI Model Manager is a tool for downloading and managing AI models from various s
    MODEL_STORAGE_DIR=/path/to/model/storage/directory
    ```
 
-## Usage
 
-The AI Model Manager provides three main commands:
+## Quick Start
+Follow the installation instructions above, then to download your first model:
 
-to download a model from a url: `cozy download`
+`cozy download <url> <type> <base> <optional local filename>`
+- url: could be a huggingface url to a .safetensors file or a generic civitai model page url
+- type: can be a model type like `lora`, `vae`, `controlnet`, etc
+- base: can be a model base like `sdxl`, `sd1.5`, `sd1.0`, etc
+- optional local filename: if you want to store the model with a different name than the original filename
 
-to remove all downloaded models: `cozy unload`
+to clear out disk space and remove all locally stored models: 
 
-to reload all previously downloaded models: `cozy reload`
+`cozy unload`
+
+to reload all previously downloaded models: 
+
+`cozy reload`
+
+to list all the models in your collection:
+
+`cozy list`
+
+to list data size of currently local / loaded models:
+
+`cozy list --data`
+
+
 
 other commands:
 
@@ -41,11 +74,11 @@ other commands:
 
    - you can list the ones that are currently downloaded:
 
-      `cozy list --local`
+      `cozy list --loaded`
 
    - you can list the ones that are not downloaded:
 
-      `cozy list --virtual`
+      `cozy list --unloaded`
 
    - you can list the size of the models stored locally:
 
@@ -57,8 +90,6 @@ other commands:
 
    - you can change the filename
    - you can add / remove / clear tags
-
-to remove a model from the db: `cozy purge`
 
 
 ### 1. Download a model
@@ -81,33 +112,44 @@ to store it like `flux1-dev-ae.safetensors`
 The `model-type` and the `model-base-type` will create subdirectories in the `MODEL_STORAGE_DIR`
 
 
-### 2. Clear Up Space
+### 2. Unload Models 
 
-To remove all the downloaded models, we can run:
-`cozy clear`
+You can clear up disk space by unloading models from your drive. If you run the unload command it will remove all the locally stored models from your drive. e.g.
 
-To remove all the models with a specific tag, we can run:
+`cozy unload`
 
-`cozy clear --tag <tag>`
+To remove all the models with a specific tag:
+
+#### TBD:
+
+`cozy unload --tag <tag>`
+
+`cozy unload --model-type <model-type>`
+
+`cozy unload --model-base <model-base>`
 
 ### 3. Reload Models
 
 Since all the information of our previously downloaded models are stored in a json file, 
 we can redownload all the models by running:
+
 `cozy reload`
 
-### 4. Purge Models
+#### TBD:
 
-If you want to fully remove a model from both the storage and the json file, you can run:
-`cozy purge <id>`
+`cozy reload --tag <tag>` ## reloads all the models with a specific tag
+
+`cozy reload --model-type <model-type>` ## reloads all the models with a specific model type
+
+`cozy reload --model-base <model-base>` ## reloads all the models with a specific model base
 
 ### 5. List Models
 
 `cozy list --all`
 
-`cozy list --local` ## shows the models that are currently stored locally
+`cozy list --loaded` ## shows the models that are currently stored locally
 
-`cozy list --virtual` ## show shte models that are not stored locally and only available 'virtually' in the json file
+`cozy list --unloaded` ## show shte models that are not stored locally and only available 'virtually' in the json file
 
 `cozy list --data` ## shows the size of the models stored locally
 
