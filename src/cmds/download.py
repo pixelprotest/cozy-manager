@@ -1,17 +1,6 @@
 import os
-import json
-from urllib.parse import urlparse
-from src.utils import (get_download_args, 
-                       get_clearup_args, 
-                       get_list_args, 
-                       get_edit_args,
-                       get_reload_args,
-                       sanitize_and_validate_arg_input, 
-                       get_absolute_model_filepath, 
-                       get_user_choice,
-                       print_db_entry,
-                       clear_terminal,
-                       get_size_of_path) 
+from src.utils.generic import (get_download_args, 
+                               sanitize_and_validate_arg_input)
 from src.main import check_and_download_file
 from dotenv import load_dotenv
 load_dotenv()
