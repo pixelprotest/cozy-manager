@@ -5,7 +5,6 @@ from src.cmds import (download_model,
                        clearup_space,
                        redownload_models,
                        list_models,
-                       purge_model, 
                        edit_db)
 
 # Load environment variables from .env file
@@ -21,7 +20,6 @@ cmd_map = {
     "clear": clearup_space,
     "reload": redownload_models,
     "list": list_models,
-    "purge": purge_model,
     "edit": edit_db
 }
 

@@ -50,6 +50,13 @@ def get_edit_args():
     parser.add_argument("id", type=str, help="ID of the model entry to edit")
     return parser.parse_args()
 
+def get_reload_args():
+    parser = argparse.ArgumentParser(description="Reload models.")
+    parser.add_argument("_cmd", help="entry command into the reload function of the cozy manager")
+    parser.add_argument("--model-type", type=str, help="Only reload the models of this type, e.g. controlnet, unet, checkpoint")
+    parser.add_argument("--model-base", type=str, help="Only reload the models of this base, e.g. flux1, sdxl, sd15")
+    return parser.parse_args()
+
 def log_into_huggingface():
     huggingface_hub.login(hf_token)
 
