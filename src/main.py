@@ -1,11 +1,11 @@
 import os
 import json
-from src.download import (download_file_from_hf, 
+from src.utils.download import (download_file_from_hf, 
                           download_file_from_civitai, 
                           download_file)
-from src.info import (create_download_info, 
+from src.utils.info import (create_download_info, 
                       save_download_info)
-from src.utils import get_absolute_model_filepath
+from src.utils.generic import get_absolute_model_filepath
 from dotenv import load_dotenv
 load_dotenv()
 

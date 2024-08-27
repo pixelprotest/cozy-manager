@@ -2,9 +2,9 @@ import os
 import huggingface_hub
 import wget
 import subprocess
-from src.utils import (get_huggingface_repo_id, 
-                       get_huggingface_filename, 
-                       validate_filename)
+from src.utils.generic import (get_huggingface_repo_id, 
+                               get_huggingface_filename, 
+                               validate_filename)
 
 def download_file(url, filename=None , download_dir="downloads"):
     """Download a file from the given URL into a specific directory with a specific filename."""

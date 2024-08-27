@@ -1,6 +1,6 @@
 import json
 import os
-from src.utils import get_absolute_model_filepath
+from src.utils.generic import get_absolute_model_filepath
 
 def create_download_info(url, 
                          filename, 
