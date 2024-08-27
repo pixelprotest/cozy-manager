@@ -82,3 +82,12 @@ If you want to fully remove a model from both the storage and the json file, you
 `cozy tag <id> <tag>` ## tags a model with a given tag
 
 `cozy tag <id> --remove <tag>` ## removes a tag from a model
+
+really it should actually be `cozy remove <tag> <id>`, but 
+then it would get confusing what type of thing you are trying to 
+remove..
+
+### 7. Edit Mode..
+`cozy edit <id>`
+
+this will open a command line prompt asking you what you want to edit
