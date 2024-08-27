@@ -1,11 +1,11 @@
 import sys
 import os
 from dotenv import load_dotenv
-from src.cmds import (download_model,
-                       clearup_space,
-                       redownload_models,
-                       list_models,
-                       edit_db)
+from src.cmds.download import download_model
+from src.cmds.unload import clearup_space
+from src.cmds.reload import redownload_models
+from src.cmds.list import list_models
+from src.cmds.edit import edit_db
 
 # Load environment variables from .env file
 load_dotenv()

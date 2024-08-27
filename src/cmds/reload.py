@@ -1,0 +1,57 @@
+import os
+import json
+from urllib.parse import urlparse
+from src.utils import (get_download_args, 
+                       get_clearup_args, 
+                       get_list_args, 
+                       get_edit_args,
+                       get_reload_args,
+                       sanitize_and_validate_arg_input, 
+                       get_absolute_model_filepath, 
+                       get_user_choice,
+                       print_db_entry,
+                       clear_terminal,
+                       get_size_of_path) 
+from src.main import check_and_download_file
+from dotenv import load_dotenv
+load_dotenv()
+
+storage_root_dir = os.getenv("MODEL_STORAGE_DIR")
+db_filepath = os.getenv("MODEL_INFO_FILE")
+
+def redownload_models():
+    """ Main entry point for redownloading models """
+    args = get_reload_args()
+    # Read the download_info.json file
+    with open(db_filepath, "r") as json_file:
+        download_info = json.load(json_file)
+
+    # Iterate through each entry in the download_info
+    for entry in download_info.values():
+        url = entry.get("url")
+        local_filename = entry.get("local_filename")
+        model_type = entry.get("model_type")
+        model_base = entry.get("model_base")
+        local_filepath = get_absolute_model_filepath(local_filename, model_type, model_base)
+        
+        if url and local_filename:
+            # Ensure the directory exists
+            os.makedirs(os.path.dirname(local_filepath), exist_ok=True)
+            
+            # Extract the filename from the URL if not present in local_filename
+            if os.path.basename(local_filename) == "":
+                parsed_url = urlparse(url)
+                filename = os.path.basename(parsed_url.path)
+                local_filename = os.path.join(local_filepath, filename)
+            
+            # Download the file
+            filename = check_and_download_file(url, 
+                                               os.path.dirname(local_filepath), 
+                                               db_filepath,
+                                               model_type=model_type,
+                                               model_base=model_base,
+                                               filename=os.path.basename(local_filepath))
+        else:
+            print(f"Skipping entry due to missing URL or local filename: {entry}")
+
+    print("Redownload process completed.")
