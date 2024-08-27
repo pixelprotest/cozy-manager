@@ -88,6 +88,7 @@ then it would get confusing what type of thing you are trying to
 remove..
 
 ### 7. Edit Mode..
+
 `cozy edit <id>`
 
-this will open a command line prompt asking you what you want to edit
+this will open a command line prompt asking you what you want to edit, it will walk you through some options

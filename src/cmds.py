@@ -302,9 +302,8 @@ def edit_db():
         print(f"Error: Model with ID {args.id} not found.")
         return
 
-    print('-' * 40)
-    print('--- Editing this entry -----------------') 
-    print_db_entry(args.id, db[args.id])
+    
+    print_db_entry(args.id, db[args.id], header_str='Editing this db entry')
 
     model_entry = db[args.id]
 
@@ -316,6 +315,7 @@ def edit_db():
 
     if choice == "1":
         # Edit tags
+        print_db_entry(args.id, db[args.id], header_str='Editing this db entry')
         current_tags = model_entry.get('tags', [])
         print(f"Current tags: {', '.join(current_tags)}")
         
@@ -323,7 +323,7 @@ def edit_db():
         options = ["Add a tag", "Remove a tag", "Clear all tags", "Cancel"]
         choice = get_user_choice(question, options)
 
-        if choice == "1":
+        if choice == "1": ## add a tag
             new_tag = input("Enter the tag to add: ").strip()
             if new_tag and new_tag not in current_tags:
                 current_tags.append(new_tag)
@@ -332,24 +332,30 @@ def edit_db():
                 print(f"Tag '{new_tag}' already exists.")
             else:
                 print("No valid tag entered.")
-        elif choice == "2":
+                return
+        elif choice == "2": ## remove a tag
             if current_tags:
-                tag_to_remove = input("Enter the tag to remove: ").strip()
-                if tag_to_remove in current_tags:
-                    current_tags.remove(tag_to_remove)
-                    print(f"Tag '{tag_to_remove}' removed.")
-                else:
-                    print(f"Tag '{tag_to_remove}' not found.")
+                while True:
+                    tag_to_remove = input("Enter the tag to remove: ").strip()
+                    if tag_to_remove == 'q':
+                        break
+                    elif tag_to_remove in current_tags:
+                        current_tags.remove(tag_to_remove)
+                        print(f"Tag '{tag_to_remove}' removed.")
+                        break
+                    else:
+                        print(f"Tag '{tag_to_remove}' not found. (q to quit)")
             else:
                 print("No tags to remove.")
-        elif choice == "3":
+                return
+        elif choice == "3": ## clear all tags
             current_tags.clear()
             print("All tags cleared.")
         else:
             print("No changes made to tags.")
 
         model_entry['tags'] = current_tags
-        print(f"Updated tags: {', '.join(current_tags)}")
+        print_db_entry(args.id, db[args.id], header_str='Finished editing tags')
 
     elif choice == "2":
         # Edit local filename
