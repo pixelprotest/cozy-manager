@@ -6,7 +6,8 @@ from src.cmds import (download_model,
                        redownload_models,
                        list_models,
                        purge_model, 
-                       tag_model)
+                       tag_model,
+                       edit_db)
 
 # Load environment variables from .env file
 load_dotenv()
@@ -22,7 +23,8 @@ cmd_map = {
     "reload": redownload_models,
     "list": list_models,
     "purge": purge_model,
-    "tag": tag_model
+    "tag": tag_model,
+    "edit": edit_db
 }
 
 def get_cozy_command():

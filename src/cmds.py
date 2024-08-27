@@ -6,8 +6,11 @@ from src.utils import (get_download_args,
                        get_list_args, 
                        get_purge_args,
                        get_tag_args,
+                       get_edit_args,
                        sanitize_and_validate_arg_input, 
-                       get_absolute_model_filepath) 
+                       get_absolute_model_filepath, 
+                       get_user_choice,
+                       print_db_entry) 
 from src.main import check_and_download_file
 from dotenv import load_dotenv
 load_dotenv()
@@ -188,15 +191,8 @@ def list_models():
 
     if args.all:
         for id, entry in download_info.items():
-            print(f"ID: {id}")
-            print(f"URL: {entry.get('url', 'N/A')}")
-            print(f"Local Filename: {entry.get('local_filename', 'N/A')}")
-            print(f"Model Type: {entry.get('model_type', 'N/A')}")
-            print(f"Model Base: {entry.get('model_base', 'N/A')}")
-            print(f"Download Date: {entry.get('download_date', 'N/A')}")
-            tags = entry.get('tags', [])
-            print(f"Tags: {', '.join(tags) if tags else 'None'}")
-            print("-" * 40)
+            print_db_entry(id, entry)
+
     elif args.local:
         for id, entry in download_info.items():
             local_filename = entry.get('local_filename', 'N/A')
@@ -291,3 +287,95 @@ def tag_model():
         json.dump(download_info, json_file, indent=4)
 
     print(f"Model {args.id} tags: {', '.join(model_entry['tags'])}")
+
+
+def edit_db():
+    """ Main entry point for editing the db """
+    args = get_edit_args()
+
+    # Load the json database file
+    with open(db_filepath, "r") as f:
+        db = json.load(f)
+
+    # Check if the provided id exists
+    if args.id not in db:
+        print(f"Error: Model with ID {args.id} not found.")
+        return
+
+    print('-' * 40)
+    print('--- Editing this entry -----------------') 
+    print_db_entry(args.id, db[args.id])
+
+    model_entry = db[args.id]
+
+    question = "What would you like to edit?"
+    options = ["Edit tags", 
+               "Edit local filename",
+               "Cancel"]
+    choice = get_user_choice(question, options)
+
+    if choice == "1":
+        # Edit tags
+        current_tags = model_entry.get('tags', [])
+        print(f"Current tags: {', '.join(current_tags)}")
+        
+        question = "What would you like to do with the tags?"
+        options = ["Add a tag", "Remove a tag", "Clear all tags", "Cancel"]
+        choice = get_user_choice(question, options)
+
+        if choice == "1":
+            new_tag = input("Enter the tag to add: ").strip()
+            if new_tag and new_tag not in current_tags:
+                current_tags.append(new_tag)
+                print(f"Tag '{new_tag}' added.")
+            elif new_tag in current_tags:
+                print(f"Tag '{new_tag}' already exists.")
+            else:
+                print("No valid tag entered.")
+        elif choice == "2":
+            if current_tags:
+                tag_to_remove = input("Enter the tag to remove: ").strip()
+                if tag_to_remove in current_tags:
+                    current_tags.remove(tag_to_remove)
+                    print(f"Tag '{tag_to_remove}' removed.")
+                else:
+                    print(f"Tag '{tag_to_remove}' not found.")
+            else:
+                print("No tags to remove.")
+        elif choice == "3":
+            current_tags.clear()
+            print("All tags cleared.")
+        else:
+            print("No changes made to tags.")
+
+        model_entry['tags'] = current_tags
+        print(f"Updated tags: {', '.join(current_tags)}")
+
+    elif choice == "2":
+        # Edit local filename
+        current_filename = model_entry.get('local_filename', '')
+        print(f"Current filename: {current_filename}")
+        new_filename = input("Enter new filename: ").strip()
+        
+        if new_filename and new_filename != current_filename:
+            # Rename the file on disk
+            old_path = get_absolute_model_filepath(current_filename, model_entry.get('model_type'), model_entry.get('model_base'))
+            new_path = get_absolute_model_filepath(new_filename, model_entry.get('model_type'), model_entry.get('model_base'))
+            
+            try:
+                os.rename(old_path, new_path)
+                model_entry['local_filename'] = new_filename
+                print("Filename updated.")
+            except OSError as e:
+                print(f"Error renaming file: {e}")
+                return
+
+    else:
+        print("Invalid choice. No changes made.")
+        return
+
+    # Save the updated json db file
+    with open(db_filepath, "w") as f:
+        json.dump(db, f, indent=4)
+
+    print("Database updated successfully.")

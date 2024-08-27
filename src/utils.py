@@ -52,6 +52,12 @@ def get_tag_args():
     parser.add_argument("--remove", action="store_true", help="Remove the specified tag instead of adding it")
     return parser.parse_args()
 
+def get_edit_args():
+    parser = argparse.ArgumentParser(description="Edit db entry.")
+    parser.add_argument("_cmd", help="entry command into the edit function of the cozy manager")
+    parser.add_argument("id", type=str, help="ID of the model entry to edit")
+    return parser.parse_args()
+
 def log_into_huggingface():
     huggingface_hub.login(hf_token)
 
@@ -83,4 +89,25 @@ def sanitize_and_validate_arg_input(arg_input, mapping_type):
     raise ValueError(f"Invalid {error_type}: {model_input}. "
                      f"Please use one of the supported {error_type}s: {', '.join(mappings.keys())}, "
                      f"or add new ones to the config.yaml")
+
+
+def get_user_choice(question, options):
+    print('-' * 40)
+    print(f'--- {question}')
+    for i, o in enumerate(options):
+        print(f'--- {i+1}. {o}')
+    print('-' * 40)
+    return input(f"Enter your choice (1-{len(options)}): ")
+
+def print_db_entry(id, entry, ):
+    print("-" * 40)
+    print(f"ID: {id}")
+    print(f"URL: {entry.get('url', 'N/A')}")
+    print(f"Local Filename: {entry.get('local_filename', 'N/A')}")
+    print(f"Model Type: {entry.get('model_type', 'N/A')}")
+    print(f"Model Base: {entry.get('model_base', 'N/A')}")
+    print(f"Download Date: {entry.get('download_date', 'N/A')}")
+    tags = entry.get('tags', [])
+    print(f"Tags: {', '.join(tags) if tags else 'None'}")
+    print("-" * 40)
 
