@@ -10,7 +10,8 @@ from src.utils import (get_download_args,
                        sanitize_and_validate_arg_input, 
                        get_absolute_model_filepath, 
                        get_user_choice,
-                       print_db_entry) 
+                       print_db_entry,
+                       clear_terminal) 
 from src.main import check_and_download_file
 from dotenv import load_dotenv
 load_dotenv()
@@ -189,7 +190,8 @@ def list_models():
     with open(db_filepath, "r") as f:
         download_info = json.load(f)
 
-    if args.all:
+    if args.all or (not args.local and not args.virtual and not args.model_type and not args.model_base and not args.data_size):
+        clear_terminal()
         for id, entry in download_info.items():
             print_db_entry(id, entry)
 
