@@ -91,16 +91,23 @@ def sanitize_and_validate_arg_input(arg_input, mapping_type):
                      f"or add new ones to the config.yaml")
 
 
-def get_user_choice(question, options):
-    print('-' * 40)
+def get_user_choice(question, options, line_len=80):
+    print('-' * line_len)
     print(f'--- {question}')
     for i, o in enumerate(options):
         print(f'--- {i+1}. {o}')
-    print('-' * 40)
+    print('-' * line_len)
     return input(f"Enter your choice (1-{len(options)}): ")
 
-def print_db_entry(id, entry, ):
-    print("-" * 40)
+def print_db_entry(id, entry, header_str=None, line_len=80):
+    if header_str:
+        clear_terminal()
+        print('-' * line_len)
+        header_len = len(header_str)
+        dash_count = max(0, line_len - 5 - header_len) ## 5 for '--- ' and ' '
+        print(f'--- {header_str} {"-" * dash_count}')
+
+    print("-" * line_len)
     print(f"ID: {id}")
     print(f"URL: {entry.get('url', 'N/A')}")
     print(f"Local Filename: {entry.get('local_filename', 'N/A')}")
@@ -109,5 +116,7 @@ def print_db_entry(id, entry, ):
     print(f"Download Date: {entry.get('download_date', 'N/A')}")
     tags = entry.get('tags', [])
     print(f"Tags: {', '.join(tags) if tags else 'None'}")
-    print("-" * 40)
+    print("-" * line_len)
 
+def clear_terminal():
+    print("\033c", end="")
