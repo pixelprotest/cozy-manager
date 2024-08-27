@@ -2,7 +2,7 @@
 
 Cozy AI Model Manager is a command line tool for managing your AI Model Collection.
 
-Key features:
+## Key features:
 - Keep track of your entire model collection, never having to manually download the same model twice.
 - Simple command to deploy your model collection on new machines.
 - Automatically renames ambiguous model names to descriptive names based on repo:
@@ -60,36 +60,21 @@ to list all the models in your collection:
 
 `cozy list`
 
-to list data size of currently local / loaded models:
+`cozy list --loaded` list the ones that are currently downloaded locally
 
-`cozy list --data`
+`cozy list --unloaded` list the ones that are in the collection but _not_ downloaded
+
+`cozy list --data` list the size of the models stored locally 
+
+to edit the db entry for a model
+
+`cozy edit <id>`
+this will open a command line prompt asking you what you want to edit, it will walk you through some options:
+- add / remove / clear tags
+- change the local filename
+- remove the model from the collection
 
 
-
-other commands:
-
-- to list all the models in the db: 
-
-   `cozy list`
-
-   - you can list the ones that are currently downloaded:
-
-      `cozy list --loaded`
-
-   - you can list the ones that are not downloaded:
-
-      `cozy list --unloaded`
-
-   - you can list the size of the models stored locally:
-
-      `cozy list --data`
-
-- to edit the db entry for a model, this will open a command line prompt asking you what you want to edit, it will walk you through some options
-
-   `cozy edit <id>`
-
-   - you can change the filename
-   - you can add / remove / clear tags
 
 
 ### 1. Download a model
@@ -111,6 +96,9 @@ to store it like `flux1-dev-ae.safetensors`
 
 The `model-type` and the `model-base-type` will create subdirectories in the `MODEL_STORAGE_DIR`
 
+#### TBD
+- automatically detect the model type and the model base from the url
+
 
 ### 2. Unload Models 
 
@@ -118,15 +106,14 @@ You can clear up disk space by unloading models from your drive. If you run the 
 
 `cozy unload`
 
-To remove all the models with a specific tag:
-
 #### TBD:
 
-`cozy unload --tag <tag>`
+`cozy unload --tag <tag>` unload all the models with a specific tag
 
-`cozy unload --model-type <model-type>`
+`cozy unload --model-type <model-type>` unload all the models with a specific model type
 
-`cozy unload --model-base <model-base>`
+`cozy unload --model-base <model-base>` unload all the models with a specific model base
+
 
 ### 3. Reload Models
 
@@ -137,21 +124,21 @@ we can redownload all the models by running:
 
 #### TBD:
 
-`cozy reload --tag <tag>` ## reloads all the models with a specific tag
+`cozy reload --tag <tag>` reloads all the models with a specific tag
 
-`cozy reload --model-type <model-type>` ## reloads all the models with a specific model type
+`cozy reload --model-type <model-type>` reloads all the models with a specific model type
 
-`cozy reload --model-base <model-base>` ## reloads all the models with a specific model base
+`cozy reload --model-base <model-base>` reloads all the models with a specific model base
 
 ### 5. List Models
 
 `cozy list --all`
 
-`cozy list --loaded` ## shows the models that are currently stored locally
+`cozy list --loaded` shows the models that are currently stored locally
 
-`cozy list --unloaded` ## show shte models that are not stored locally and only available 'virtually' in the json file
+`cozy list --unloaded` show shte models that are not stored locally and only available 'virtually' in the json file
 
-`cozy list --data` ## shows the size of the models stored locally
+`cozy list --data` shows the size of the models stored locally
 
 
 ### 6. Edit Mode..

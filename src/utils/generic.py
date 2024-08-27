@@ -5,7 +5,7 @@ import argparse
 from dotenv import load_dotenv
 load_dotenv()
 
-config_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config.yaml')
+config_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), os.path.pardir, 'config.yaml')
 
 def get_download_args():
     parser = argparse.ArgumentParser(description="Download AI models from various sources.")
