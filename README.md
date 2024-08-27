@@ -48,28 +48,14 @@ Follow the installation instructions above, then to download your first model:
 - base: can be a model base like `sdxl`, `sd1.5`, `sd1.0`, etc
 - optional local filename: if you want to store the model with a different name than the original filename
 
-to clear out disk space and remove all locally stored models: 
 
-`cozy unload`
+`cozy unload` clear out disk space and remove all locally stored models: 
 
-to reload all previously downloaded models: 
+`cozy reload` reload all previously downloaded models
 
-`cozy reload`
+`cozy list` list all the models in your collection
 
-to list all the models in your collection:
-
-`cozy list`
-
-`cozy list --loaded` list the ones that are currently downloaded locally
-
-`cozy list --unloaded` list the ones that are in the collection but _not_ downloaded
-
-`cozy list --data` list the size of the models stored locally 
-
-to edit the db entry for a model
-
-`cozy edit <id>`
-this will open a command line prompt asking you what you want to edit, it will walk you through some options:
+`cozy edit <id>` edit the db entry for a model this will open a command line prompt asking you what you want to edit, it will walk you through some options:
 - add / remove / clear tags
 - change the local filename
 - remove the model from the collection
@@ -96,8 +82,8 @@ to store it like `flux1-dev-ae.safetensors`
 
 The `model-type` and the `model-base-type` will create subdirectories in the `MODEL_STORAGE_DIR`
 
-#### TBD
-- automatically detect the model type and the model base from the url
+   - #### TBD
+   - automatically detect the model type and the model base from the url
 
 
 ### 2. Unload Models 
@@ -106,13 +92,13 @@ You can clear up disk space by unloading models from your drive. If you run the 
 
 `cozy unload`
 
-#### TBD:
+   - #### TBD:
 
-`cozy unload --tag <tag>` unload all the models with a specific tag
+   - `cozy unload --tag <tag>` unload all the models with a specific tag
 
-`cozy unload --model-type <model-type>` unload all the models with a specific model type
+   - `cozy unload --model-type <model-type>` unload all the models with a specific model type
 
-`cozy unload --model-base <model-base>` unload all the models with a specific model base
+   - `cozy unload --model-base <model-base>` unload all the models with a specific model base
 
 
 ### 3. Reload Models
@@ -122,26 +108,26 @@ we can redownload all the models by running:
 
 `cozy reload`
 
-#### TBD:
+   - #### TBD:
 
-`cozy reload --tag <tag>` reloads all the models with a specific tag
+   - `cozy reload --tag <tag>` reloads all the models with a specific tag
 
-`cozy reload --model-type <model-type>` reloads all the models with a specific model type
+   - `cozy reload --model-type <model-type>` reloads all the models with a specific model type
 
-`cozy reload --model-base <model-base>` reloads all the models with a specific model base
+   - `cozy reload --model-base <model-base>` reloads all the models with a specific model base
 
 ### 5. List Models
 
 `cozy list --all`
 
-`cozy list --loaded` shows the models that are currently stored locally
+`cozy list --loaded` list the ones that are currently downloaded locally
 
-`cozy list --unloaded` show shte models that are not stored locally and only available 'virtually' in the json file
+`cozy list --unloaded` list the ones that are in the collection but _not_ downloaded
 
-`cozy list --data` shows the size of the models stored locally
+`cozy list --data` list the size of the models stored locally 
 
 
-### 6. Edit Mode..
+### 6. Edit Mode
 
 `cozy edit <id>`
 
