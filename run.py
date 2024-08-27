@@ -23,7 +23,6 @@ cmd_map = {
     "reload": redownload_models,
     "list": list_models,
     "purge": purge_model,
-    "tag": tag_model,
     "edit": edit_db
 }
 
