@@ -44,14 +44,6 @@ def get_purge_args():
     parser.add_argument("--force", action="store_true", help="Force purge without confirmation")
     return parser.parse_args()
 
-def get_tag_args():
-    parser = argparse.ArgumentParser(description="Tag a model.")
-    parser.add_argument("_cmd", help="entry command into the tag function of the cozy manager")
-    parser.add_argument("id", type=str, help="ID of the model to tag")
-    parser.add_argument("tag", type=str, help="Tag to add to or remove from the model")
-    parser.add_argument("--remove", action="store_true", help="Remove the specified tag instead of adding it")
-    return parser.parse_args()
-
 def get_edit_args():
     parser = argparse.ArgumentParser(description="Edit db entry.")
     parser.add_argument("_cmd", help="entry command into the edit function of the cozy manager")
