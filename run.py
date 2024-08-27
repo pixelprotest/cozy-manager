@@ -27,7 +27,7 @@ def get_cozy_command():
     if len(sys.argv) < 2:
         print("--- Missing an actionable command" )
         print("--- Usage:")
-        print(f"--- > cozy <{' | '.join(cmd_map.keys())}> ... etc")
+        print(f"--- > cozy < {' | '.join(cmd_map.keys())} > ... etc")
         sys.exit(1)
     ## now we should have _a_ command
     cmd = sys.argv[1]

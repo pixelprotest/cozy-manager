@@ -2,8 +2,9 @@ import os
 import huggingface_hub
 import wget
 import subprocess
-from src.utils import get_filenames_to_auto_rename
-
+from src.utils import (get_huggingface_repo_id, 
+                       get_huggingface_filename, 
+                       validate_filename)
 
 def download_file(url, filename=None , download_dir="downloads"):
     """Download a file from the given URL into a specific directory with a specific filename."""
@@ -22,22 +23,19 @@ def download_file(url, filename=None , download_dir="downloads"):
 def download_file_from_hf(url, filename=None, download_dir="downloads"):
     # Create the download directory if it doesn't exist
     os.makedirs(download_dir, exist_ok=True)
-    
+
     # If filename is not provided, use the last part of the URL
     if filename is None:
-        filename = os.path.basename(url)
-        ## now check against the filenames to auto rename
-        for filename_to_auto_rename in get_filenames_to_auto_rename():
-            if filename_to_auto_rename in filename:
-                filename = filename_to_auto_rename
-                break
+        ## lets wrap in a function
+        filename = validate_filename(url)
     
     # Construct the full path for the downloaded file
     full_path = os.path.join(download_dir, filename)
 
-    repo_id = "/".join(url.split("/")[3:5]) ## extract repo_id from URL
-    filename_in_repo = url.split("/")[-1] ## extract filename from URL
+    repo_id = get_huggingface_repo_id(url) ## extract repo_id from URL
+    filename_in_repo = get_huggingface_filename(url) ## extract filename from URL
     print(f'repo id: {repo_id}, filename: {filename_in_repo}')
+    
     # Download the file using huggingface_hub
     huggingface_hub.hf_hub_download(
         repo_id=repo_id,
@@ -106,6 +104,5 @@ def download_file_from_civitai(url, filename=None, download_dir="downloads"):
         print(f"Unexpected error downloading file from Civitai: {e}")
         return None
     
-
 def get_existing_dirs(dir):
     return [d for d in os.listdir(dir) if os.path.isdir(os.path.join(dir, d))]

@@ -149,3 +149,36 @@ def get_size_of_path(path):
     ## convert to MB
     total_size = round(total_size / (1024 * 1024), 2)
     return total_size
+
+def get_huggingface_repo_id(url):
+    return "/".join(url.split("/")[3:5])
+
+def get_huggingface_repo_author(url):
+    return "/".join(url.split("/")[3:4])
+
+def get_huggingface_repo_name(url):
+    return "/".join(url.split("/")[4:5])
+
+def get_huggingface_filename(url):
+    return url.split("/")[-1]   
+
+def validate_filename(url):
+    print('validating filename:')
+    auto_rename_filenames = get_filenames_to_auto_rename()
+    print(f'auto_rename_filenames: {auto_rename_filenames}')
+    filename = os.path.basename(url)
+    print(f'filename: {filename}')
+
+    # Split the filename and extension
+    filename_base, ext = os.path.splitext(filename)
+    print(f'name: {filename_base}, ext: {ext}')
+
+    ## now check if the filename should be renamed..
+    if filename_base in auto_rename_filenames:
+        repo_name = get_huggingface_repo_name(url)
+        filename = f"{repo_name}{ext}"
+        print(f'filename: {filename}')
+
+    print('returning filename: ', filename)
+
+    return filename
