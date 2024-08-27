@@ -223,7 +223,7 @@ def list_models():
         print(f"Found {len(matching_models)} models for model base '{model_base}':")
         for id, entry in matching_models:
             print_db_entry(id, entry)
-    elif args.data_size:
+    elif args.data:
         print("Calculating the size of the models stored locally...")
         total_size = 0
         for entry in download_info.values():
