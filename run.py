@@ -6,7 +6,6 @@ from src.cmds import (download_model,
                        redownload_models,
                        list_models,
                        purge_model, 
-                       tag_model,
                        edit_db)
 
 # Load environment variables from .env file

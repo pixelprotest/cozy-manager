@@ -35,18 +35,28 @@ to reload all previously downloaded models: `cozy reload`
 
 other commands:
 
-to list all the models in the db: `cozy list`
-- you can list the ones that are currently downloaded:
+- to list all the models in the db: 
 
-   `cozy list --local`
-- you can list the ones that are not downloaded:
+   `cozy list`
 
-   `cozy list --virtual`
+   - you can list the ones that are currently downloaded:
 
-edit the db entry for a model, this will open a command line prompt asking you what you want to edit, it will walk you through some options
+      `cozy list --local`
+
+   - you can list the ones that are not downloaded:
+
+      `cozy list --virtual`
+
+   - you can list the size of the models stored locally:
+
+      `cozy list --data`
+
+- to edit the db entry for a model, this will open a command line prompt asking you what you want to edit, it will walk you through some options
+
    `cozy edit <id>`
-- you can change the filename
-- you can add / remove / clear tags
+
+   - you can change the filename
+   - you can add / remove / clear tags
 
 to remove a model from the db: `cozy purge`
 
