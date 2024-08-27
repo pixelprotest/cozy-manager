@@ -5,7 +5,6 @@ from src.utils import (get_download_args,
                        get_clearup_args, 
                        get_list_args, 
                        get_purge_args,
-                       get_tag_args,
                        get_edit_args,
                        sanitize_and_validate_arg_input, 
                        get_absolute_model_filepath, 
@@ -235,48 +234,16 @@ def list_models():
             if os.path.exists(local_filepath):
                 total_size += os.path.getsize(local_filepath)
         print(f"Total size of models stored locally: {total_size / (1024 * 1024):.2f} MB")
+    elif args.virtual:
+        print("Listing the models that are not stored locally...")
+        for entry in download_info.values():
+            if not entry.get('local_filename'):
+                print(f"ID: {entry.get('id', 'N/A')}")
+                print(f"URL: {entry.get('url', 'N/A')}")
+                print(f"Model Base: {entry.get('model_base', 'N/A')}")
+                print("-" * 40)
     else:
         print("Please specify --all to list all models.")
-
-def tag_model():
-    """ Main entry point for tagging a model """
-    args = get_tag_args()
-    # Read the download_info.json file
-    with open(db_filepath, "r") as f:
-        download_info = json.load(f)
-
-    # Check if the model ID exists
-    if args.id not in download_info:
-        print(f"Error: Model with ID {args.id} not found.")
-        return
-
-    # Get the model entry
-    model_entry = download_info[args.id]
-
-    # Ensure the tags list exists
-    if 'tags' not in model_entry:
-        model_entry['tags'] = []
-
-    if args.remove:
-        # Remove the tag if it exists
-        if args.tag in model_entry['tags']:
-            model_entry['tags'].remove(args.tag)
-            print(f"Tag '{args.tag}' removed from model {args.id}.")
-        else:
-            print(f"Tag '{args.tag}' does not exist for model {args.id}.")
-    else:
-        # Add the tag if it doesn't exist
-        if args.tag not in model_entry['tags']:
-            model_entry['tags'].append(args.tag)
-            print(f"Tag '{args.tag}' added to model {args.id}.")
-        else:
-            print(f"Tag '{args.tag}' already exists for model {args.id}.")
-
-    # Write the updated information back to the file
-    with open(db_filepath, "w") as json_file:
-        json.dump(download_info, json_file, indent=4)
-
-    print(f"Model {args.id} tags: {', '.join(model_entry['tags'])}")
 
 
 def edit_db():

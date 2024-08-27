@@ -27,6 +27,40 @@ AI Model Manager is a tool for downloading and managing AI models from various s
 
 The AI Model Manager provides three main commands:
 
+to download a model from a url: `cozy download`
+
+to remove all downloaded models: `cozy unload`
+
+to reload all previously downloaded models: `cozy reload`
+
+other commands:
+
+- to list all the models in the db: 
+
+   `cozy list`
+
+   - you can list the ones that are currently downloaded:
+
+      `cozy list --local`
+
+   - you can list the ones that are not downloaded:
+
+      `cozy list --virtual`
+
+   - you can list the size of the models stored locally:
+
+      `cozy list --data`
+
+- to edit the db entry for a model, this will open a command line prompt asking you what you want to edit, it will walk you through some options
+
+   `cozy edit <id>`
+
+   - you can change the filename
+   - you can add / remove / clear tags
+
+to remove a model from the db: `cozy purge`
+
+
 ### 1. Download a model
 
 To download a model, the basic command is:
@@ -77,20 +111,9 @@ If you want to fully remove a model from both the storage and the json file, you
 
 `cozy list --data` ## shows the size of the models stored locally
 
-### 6. Tag Models
 
-`cozy tag <id> <tag>` ## tags a model with a given tag
-
-`cozy tag <id> --remove <tag>` ## removes a tag from a model
-
-really it should actually be `cozy remove <tag> <id>`, but 
-then it would get confusing what type of thing you are trying to 
-remove..
-
-### 7. Edit Mode..
+### 6. Edit Mode..
 
 `cozy edit <id>`
 
 this will open a command line prompt asking you what you want to edit, it will walk you through some options
-
-test 2
