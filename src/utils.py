@@ -127,3 +127,25 @@ def get_filenames_to_auto_rename():
         config_data = yaml.safe_load(config_file)
     
     return config_data.get('filenames_to_auto_rename', [])
+
+def get_size_of_path(path):
+    """ returns the size of the path in megabytes
+    provided path can be either 
+        - a file OR
+        - a directory
+    """
+    if not os.path.exists(path):
+        return 0
+
+    total_size = 0
+    if os.path.isfile(path):
+        total_size = os.path.getsize(path)
+    elif os.path.isdir(path):
+        for root, dirs, files in os.walk(path):
+            for file in files:
+                file_path = os.path.join(root, file)
+                total_size += os.path.getsize(file_path)
+
+    ## convert to MB
+    total_size = round(total_size / (1024 * 1024), 2)
+    return total_size

@@ -11,7 +11,8 @@ from src.utils import (get_download_args,
                        get_absolute_model_filepath, 
                        get_user_choice,
                        print_db_entry,
-                       clear_terminal) 
+                       clear_terminal,
+                       get_size_of_path) 
 from src.main import (check_and_download_file,
                       purge_model_from_db)
 from dotenv import load_dotenv
@@ -189,9 +190,8 @@ def list_models():
             model_type = entry.get('model_type', 'N/A')
             model_base = entry.get('model_base', 'N/A')
             local_filepath = get_absolute_model_filepath(local_filename, model_type, model_base)
-            if os.path.exists(local_filepath):
-                total_size += os.path.getsize(local_filepath)
-        print(f"Total size of models stored locally: {total_size / (1024 * 1024):.2f} MB")
+            total_size += get_size_of_path(local_filepath)
+        print(f"Total size of models stored locally: {total_size} MB")
     elif args.virtual:
         print("Listing the models that are not stored locally...")
         for entry in download_info.values():
