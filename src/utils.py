@@ -5,6 +5,8 @@ import argparse
 from dotenv import load_dotenv
 load_dotenv()
 
+config_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config.yaml')
+
 def get_download_args():
     parser = argparse.ArgumentParser(description="Download AI models from various sources.")
     parser.add_argument("_cmd", help="entry command into the download function of the cozy manager")
@@ -75,7 +77,6 @@ def sanitize_and_validate_arg_input(arg_input, mapping_type):
     arg_input = arg_input.lower().strip()
     
     # Load mappings from YAML file
-    config_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config.yaml')
     with open(config_path, 'r') as config_file:
         data = yaml.safe_load(config_file)
         mappings = data[mapping_type]
@@ -119,3 +120,10 @@ def print_db_entry(id, entry, header_str=None, line_len=80):
 
 def clear_terminal():
     print("\033c", end="")
+
+def get_filenames_to_auto_rename():
+    """Read the config.yaml file and return the filenames_to_auto_rename list."""
+    with open(config_path, 'r') as config_file:
+        config_data = yaml.safe_load(config_file)
+    
+    return config_data.get('filenames_to_auto_rename', [])

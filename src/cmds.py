@@ -293,7 +293,19 @@ def edit_db():
                 return
             
     elif choice == "3":
-        purge_model_from_db(args.id, force=args.force)
+        # Check if the model ID exists in the database
+        if args.id not in db:
+            print(f"Error: Model with ID '{args.id}' not found in the database.")
+            return
+
+        # Confirm deletion
+        confirm = input(f"Are you sure you want to delete model '{args.id}'? This action cannot be undone. (y/N): ")
+        if confirm.lower() != 'y':
+            print("Deletion cancelled.")
+            return
+
+        # If confirmed, proceed with deletion
+        del db[args.id]
 
     else:
         print("Invalid choice. No changes made.")

@@ -2,6 +2,8 @@ import os
 import huggingface_hub
 import wget
 import subprocess
+from src.utils import get_filenames_to_auto_rename
+
 
 def download_file(url, filename=None , download_dir="downloads"):
     """Download a file from the given URL into a specific directory with a specific filename."""
@@ -24,6 +26,11 @@ def download_file_from_hf(url, filename=None, download_dir="downloads"):
     # If filename is not provided, use the last part of the URL
     if filename is None:
         filename = os.path.basename(url)
+        ## now check against the filenames to auto rename
+        for filename_to_auto_rename in get_filenames_to_auto_rename():
+            if filename_to_auto_rename in filename:
+                filename = filename_to_auto_rename
+                break
     
     # Construct the full path for the downloaded file
     full_path = os.path.join(download_dir, filename)

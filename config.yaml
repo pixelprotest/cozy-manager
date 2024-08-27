@@ -1,3 +1,11 @@
+filenames_to_auto_rename:
+  - diffusion_pytorch_model
+  - lora
+  - checkpoint
+  - ckpt
+  - model
+  - ae
+
 model_base_names:
   flux1:
     - flux1
