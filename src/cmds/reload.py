@@ -2,8 +2,9 @@ import os
 import json
 from urllib.parse import urlparse
 from src.utils.args import get_reload_args
-from src.utils.generic import get_absolute_model_filepath
-from src.utils.db import read_db, update_entry
+from src.utils.generic import (get_absolute_model_filepath, 
+                               sanitize_and_validate_arg_input)
+from src.utils.db import read_db 
 from src.main import check_and_download_file
 from dotenv import load_dotenv
 load_dotenv()
@@ -14,6 +15,13 @@ db_filepath = os.getenv("MODEL_INFO_FILE")
 def run_reload():
     """ Main entry point for redownloading models """
     args = get_reload_args()
+
+    load_model_type = None
+    load_model_base = None
+    if args.model_type:
+        load_model_type = sanitize_and_validate_arg_input(args.model_type, 'model_type_names')
+    if args.model_base:
+        load_model_base = sanitize_and_validate_arg_input(args.model_base, 'model_base_names')
 
     db = read_db()
 
@@ -30,6 +38,16 @@ def run_reload():
             if args.tag not in tags:
                 ## then we can skip this file
                 continue 
+        
+        if load_model_type:
+            if load_model_type != model_type:
+                ## then we can skip this file
+                continue
+
+        if load_model_base:
+            if load_model_base != model_base:
+                ## then we can skip this file
+                continue
 
         if url and local_filename:
             # Ensure the directory exists

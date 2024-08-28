@@ -108,13 +108,11 @@ we can redownload all the models by running:
 
 `cozy reload`
 
-   - #### TBD:
+`cozy reload --tag <tag>` reloads all the models with a specific tag
 
-   - `cozy reload --tag <tag>` reloads all the models with a specific tag
+`cozy reload --model-type <model-type>` reloads all the models with a specific model type
 
-   - `cozy reload --model-type <model-type>` reloads all the models with a specific model type
-
-   - `cozy reload --model-base <model-base>` reloads all the models with a specific model base
+`cozy reload --model-base <model-base>` reloads all the models with a specific model base
 
 ### 5. List Models
 
