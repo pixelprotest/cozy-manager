@@ -13,12 +13,11 @@ db_filepath = os.getenv("MODEL_INFO_FILE")
 def run_reload():
     """ Main entry point for redownloading models """
     args = get_reload_args()
-    # Read the download_info.json file
-    with open(db_filepath, "r") as json_file:
-        download_info = json.load(json_file)
 
-    # Iterate through each entry in the download_info
-    for entry in download_info.values():
+    db = read_db()
+
+    # Iterate through each entry in the db
+    for entry in db.values():
         url = entry.get("url")
         local_filename = entry.get("local_filename")
         model_type = entry.get("model_type")

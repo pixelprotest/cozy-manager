@@ -1,9 +1,10 @@
 import os
 import json
 from urllib.parse import urlparse
-from src.utils.generic import (get_clearup_args, 
-                       sanitize_and_validate_arg_input, 
-                       get_absolute_model_filepath)
+from src.utils.generic import (get_unload_args, 
+                               sanitize_and_validate_arg_input, 
+                               get_absolute_model_filepath)
+from src.utils.db import read_db
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -12,7 +13,7 @@ db_filepath = os.getenv("MODEL_INFO_FILE")
 
 def run_unload():
     """ Main entry point for cleaning up space """
-    args = get_clearup_args()
+    args = get_unload_args()
 
     clear_model_type = None
     clear_model_base = None
@@ -21,12 +22,10 @@ def run_unload():
     if args.model_base:
         clear_model_base = sanitize_and_validate_arg_input(args.model_base, 'model_base_names')
 
-    # Read the download_info.json file
-    with open(db_filepath, "r") as json_file:
-        download_info = json.load(json_file)
+    db = read_db()
 
-    # Iterate through each entry in the download_info
-    for entry in download_info.values():
+    # Iterate through each entry in the db 
+    for entry in db.values():
         local_filename = entry.get("local_filename")
         force_keep = entry.get("force_keep", False)
         tags = entry.get("tags", [])

@@ -1,6 +1,10 @@
 import os
 import json
-from src.utils.generic import get_edit_args, print_db_entry, get_user_choice, get_absolute_model_filepath
+from src.utils.generic import (get_edit_args, 
+                               print_db_entry, 
+                               get_user_choice, 
+                               get_absolute_model_filepath)
+from src.utils.db import read_db, write_db
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -12,9 +16,7 @@ def run_edit():
     """ Main entry point for editing the db """
     args = get_edit_args()
 
-    # Load the json database file
-    with open(db_filepath, "r") as f:
-        db = json.load(f)
+    db = read_db()
 
     # Check if the provided id exists
     if args.id not in db:
@@ -115,8 +117,6 @@ def run_edit():
         print("Invalid choice. No changes made.")
         return
 
-    # Save the updated json db file
-    with open(db_filepath, "w") as f:
-        json.dump(db, f, indent=4)
+    write_db(db)
 
     print("Database updated successfully.")

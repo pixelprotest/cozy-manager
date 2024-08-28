@@ -15,17 +15,16 @@ db_filepath = os.getenv("MODEL_INFO_FILE")
 def run_list():
     """ Main entry point for listing models """
     args = get_list_args()
-    # Load the JSON file
-    with open(db_filepath, "r") as f:
-        download_info = json.load(f)
+
+    db = read_db()
 
     if args.all or (not args.local and not args.virtual and not args.model_type and not args.model_base and not args.data):
         clear_terminal()
-        for id, entry in download_info.items():
+        for id, entry in db.items():
             print_db_entry(id, entry)
 
     elif args.local:
-        for id, entry in download_info.items():
+        for id, entry in db.items():
             local_filename = entry.get('local_filename', 'N/A')
             model_type = entry.get('model_type', 'N/A')
             model_base = entry.get('model_base', 'N/A')
@@ -41,14 +40,14 @@ def run_list():
 
     elif args.model_type:
         model_type = sanitize_and_validate_arg_input(args.model_type, 'model_type_names')
-        matching_models = [[id, entry] for id, entry in download_info.items() if entry.get('model_type') == model_type]
+        matching_models = [[id, entry] for id, entry in db.items() if entry.get('model_type') == model_type]
         print("-" * 80)
         print(f"Found {len(matching_models)} models for model type '{model_type}':")
         for id, entry in matching_models:
             print_db_entry(id, entry)
     elif args.model_base:
         model_base = sanitize_and_validate_arg_input(args.model_base, 'model_base_names')
-        matching_models = [[id, entry] for id, entry in download_info.items() if entry.get('model_base') == model_base]
+        matching_models = [[id, entry] for id, entry in db.items() if entry.get('model_base') == model_base]
         print("-" * 80)
         print(f"Found {len(matching_models)} models for model base '{model_base}':")
         for id, entry in matching_models:
@@ -56,7 +55,7 @@ def run_list():
     elif args.data:
         print("Calculating the size of the models stored locally...")
         total_size = 0
-        for entry in download_info.values():
+        for entry in db.values():
             local_filename = entry.get('local_filename', 'N/A')
             model_type = entry.get('model_type', 'N/A')
             model_base = entry.get('model_base', 'N/A')
@@ -65,7 +64,7 @@ def run_list():
         print(f"Total size of models stored locally: {total_size} MB")
     elif args.virtual:
         print("Listing the models that are not stored locally...")
-        for entry in download_info.values():
+        for entry in db.values():
             if not entry.get('local_filename'):
                 print(f"ID: {entry.get('id', 'N/A')}")
                 print(f"URL: {entry.get('url', 'N/A')}")

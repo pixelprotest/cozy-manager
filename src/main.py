@@ -13,9 +13,7 @@ db_filepath = os.getenv("MODEL_INFO_FILE")
 
 def purge_model_from_db(model_id, force=False):
     """ Main entry point for purging a model """
-    # Load the JSON file
-    with open(db_filepath, "r") as f:
-        db = json.load(f)
+    db = read_db()
 
     # Check if the ID exists in the download_info
     if model_id not in db:
@@ -50,9 +48,7 @@ def purge_model_from_db(model_id, force=False):
     # Remove the entry from the JSON file
     del db[model_id]
 
-    # Save the updated JSON file
-    with open(db_filepath, "w") as f:
-        json.dump(db, f, indent=4)
+    write_db(db)
 
     print(f"Model '{model_id}' has been purged from the database.")
 
@@ -63,16 +59,11 @@ def check_and_download_file(url,
                             model_type,
                             model_base,
                             filename=None):
-    if not os.path.exists(model_info_filepath):
-        with open(model_info_filepath, "w") as json_file:
-            json.dump({}, json_file)
-
-    with open(model_info_filepath, "r") as json_file:
-        download_info = json.load(json_file)
+    db = read_db()
     
     should_add_info = True ## init to true
     ## here we check if the file already exists, so we can bypass the download
-    for entry in download_info.values():
+    for entry in db.values():
         if entry["url"] == url:
             local_filename = entry["local_filename"]
             local_filepath = get_absolute_model_filepath(local_filename, model_type, model_base)
@@ -94,11 +85,11 @@ def check_and_download_file(url,
 
     if should_add_info:
         # Create and save download information
-        download_info = create_download_info(url, 
-                                             filename, 
-                                             model_type,
-                                             model_base,
-                                             model_info_filepath)
-        save_download_info(download_info, model_info_filepath)
+        db= create_download_info(url, 
+                                 filename, 
+                                 model_type,
+                                 model_base,
+                                 model_info_filepath)
+        save_download_info(db, model_info_filepath)
     
     return filename
