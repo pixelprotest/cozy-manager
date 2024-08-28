@@ -17,7 +17,7 @@ storage_root_dir = os.environ.get("MODEL_STORAGE_DIR")
 ## map of the commands available to cozy manager
 cmd_map = {
     "download": run_download,
-    "clear": run_unload,
+    "unload": run_unload,
     "reload": run_reload,
     "list": run_list,
     "edit": run_edit
