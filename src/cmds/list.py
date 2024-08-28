@@ -12,7 +12,7 @@ load_dotenv()
 storage_root_dir = os.getenv("MODEL_STORAGE_DIR")
 db_filepath = os.getenv("MODEL_INFO_FILE")
 
-def list_models():
+def run_list():
     """ Main entry point for listing models """
     args = get_list_args()
     # Load the JSON file

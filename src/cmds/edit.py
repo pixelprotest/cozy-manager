@@ -8,7 +8,7 @@ storage_root_dir = os.getenv("MODEL_STORAGE_DIR")
 db_filepath = os.getenv("MODEL_INFO_FILE")
 
 
-def edit_db():
+def run_edit():
     """ Main entry point for editing the db """
     args = get_edit_args()
 

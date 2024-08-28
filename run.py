@@ -1,11 +1,11 @@
 import sys
 import os
+from src.cmds.download import run_download
+from src.cmds.unload import run_unload 
+from src.cmds.reload import run_reload 
+from src.cmds.list import run_list
+from src.cmds.edit import run_edit 
 from dotenv import load_dotenv
-from src.cmds.download import download_model
-from src.cmds.unload import clearup_space
-from src.cmds.reload import redownload_models
-from src.cmds.list import list_models
-from src.cmds.edit import edit_db
 
 # Load environment variables from .env file
 load_dotenv()
@@ -16,11 +16,11 @@ storage_root_dir = os.environ.get("MODEL_STORAGE_DIR")
 
 ## map of the commands available to cozy manager
 cmd_map = {
-    "download": download_model,
-    "clear": clearup_space,
-    "reload": redownload_models,
-    "list": list_models,
-    "edit": edit_db
+    "download": run_download,
+    "clear": run_unload,
+    "reload": run_reload,
+    "list": run_list,
+    "edit": run_edit
 }
 
 def get_cozy_command():

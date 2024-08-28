@@ -8,7 +8,7 @@ load_dotenv()
 storage_root_dir = os.getenv("MODEL_STORAGE_DIR")
 db_filepath = os.getenv("MODEL_INFO_FILE")
 
-def download_model():
+def run_download():
     """ Main entry point for downloading a model """
     args = get_download_args()
     # Set up download directory

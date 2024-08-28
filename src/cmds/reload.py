@@ -10,7 +10,7 @@ load_dotenv()
 storage_root_dir = os.getenv("MODEL_STORAGE_DIR")
 db_filepath = os.getenv("MODEL_INFO_FILE")
 
-def redownload_models():
+def run_reload():
     """ Main entry point for redownloading models """
     args = get_reload_args()
     # Read the download_info.json file
