@@ -1,10 +1,8 @@
 import os
-import json
 from src.utils.download import (download_file_from_hf, 
                           download_file_from_civitai, 
                           download_file)
-from src.utils.info import (create_download_info, 
-                      save_download_info)
+from src.utils.info import (create_download_info)
 from src.utils.generic import get_absolute_model_filepath
 from dotenv import load_dotenv
 load_dotenv()
@@ -52,10 +50,8 @@ def purge_model_from_db(model_id, force=False):
 
     print(f"Model '{model_id}' has been purged from the database.")
 
-
 def check_and_download_file(url, 
                             download_dir, 
-                            model_info_filepath, 
                             model_type,
                             model_base,
                             filename=None):
@@ -85,11 +81,9 @@ def check_and_download_file(url,
 
     if should_add_info:
         # Create and save download information
-        db= create_download_info(url, 
-                                 filename, 
-                                 model_type,
-                                 model_base,
-                                 model_info_filepath)
-        save_download_info(db, model_info_filepath)
+        db = create_download_info(url, 
+                                  filename, 
+                                  model_type,
+                                  model_base)
     
     return filename

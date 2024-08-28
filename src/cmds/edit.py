@@ -15,18 +15,13 @@ db_filepath = os.getenv("MODEL_INFO_FILE")
 def run_edit():
     """ Main entry point for editing the db """
     args = get_edit_args()
-
-    db = read_db()
-
-    # Check if the provided id exists
-    if args.id not in db:
-        print(f"Error: Model with ID {args.id} not found.")
+    id = args.id
+    model_entry = get_entry(id)
+    if not model_entry:
         return
 
-    
-    print_db_entry(args.id, db[args.id], header_str='Editing this db entry')
-
-    model_entry = db[args.id]
+    # db = read_db()
+    print_db_entry(id, model_entry, header_str='Editing this model entry')
 
     question = "What would you like to edit?"
     options = ["Edit tags", 
@@ -35,9 +30,8 @@ def run_edit():
                "Cancel"]
     choice = get_user_choice(question, options)
 
-    if choice == "1":
-        # Edit tags
-        print_db_entry(args.id, db[args.id], header_str='Editing this db entry')
+    if choice == "1": ## edit tags
+        print_db_entry(id, model_entry, header_str='Editing this model entry')
         current_tags = model_entry.get('tags', [])
         print(f"Current tags: {', '.join(current_tags)}")
         
@@ -111,7 +105,8 @@ def run_edit():
             return
 
         # If confirmed, proceed with deletion
-        del db[args.id]
+        remove_entry(args.id)
+        print(f"Model '{args.id}' has been removed from the collection.")
 
     else:
         print("Invalid choice. No changes made.")

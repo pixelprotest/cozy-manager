@@ -5,19 +5,9 @@ from src.utils.generic import get_absolute_model_filepath
 def create_download_info(url, 
                          filename, 
                          model_type,
-                         model_base,
-                         db_filepath):
+                         model_base):
     """
     """
-    # Read existing download_info.json to get the next available ID
-    try:
-        with open(db_filepath, "r") as json_file:
-            existing_info = json.load(json_file)
-        next_id = max(map(int, existing_info.keys())) + 1
-    except (FileNotFoundError, ValueError, json.JSONDecodeError):
-        existing_info = {}
-        next_id = 1
-
     filepath = get_absolute_model_filepath(filename, model_type, model_base)
 
     if 'civitai.com' in url:
@@ -56,22 +46,3 @@ def create_download_info(url,
 
     new_info['tags'] = []
     new_info['force_keep'] = False ## if true the file will not be deleted when running the cleanup script
-
-    ## now add the new info with a new id 
-    existing_info[str(next_id)] = new_info
-
-    return existing_info
-
-def save_download_info(info, json_filepath):
-    """Save download information to a JSON file."""
-    with open(json_filepath, "r+") as json_file:
-        try:
-            existing_info = json.load(json_file)
-        except json.JSONDecodeError:
-            existing_info = {}
-        
-        existing_info.update(info)
-        
-        json_file.seek(0)
-        json.dump(existing_info, json_file, indent=4)
-        json_file.truncate()

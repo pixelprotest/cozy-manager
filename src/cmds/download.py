@@ -19,9 +19,7 @@ def run_download():
     # Check if file exists, and download if necessary
     filename = check_and_download_file(args.url, 
                                        download_dir, 
-                                       db_filepath, 
                                        model_type=model_type, 
                                        model_base=model_base,
                                        filename=args.filename)
     print(f"\nFile processed: {filename}")
-    print("Download information saved to download_info.json")

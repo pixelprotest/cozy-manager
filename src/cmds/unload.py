@@ -9,7 +9,6 @@ from dotenv import load_dotenv
 load_dotenv()
 
 storage_root_dir = os.getenv("MODEL_STORAGE_DIR")
-db_filepath = os.getenv("MODEL_INFO_FILE")
 
 def run_unload():
     """ Main entry point for cleaning up space """
