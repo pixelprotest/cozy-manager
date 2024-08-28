@@ -96,5 +96,6 @@ def delete_entry(id, force=False):
     write_db(db)
 
 def update_entry(id, entry):
+    pass
 
     

@@ -6,6 +6,7 @@ from src.utils.generic import (get_list_args,
                                print_db_entry,
                                clear_terminal,
                                get_size_of_path)
+from src.utils.db import read_db
 from dotenv import load_dotenv
 load_dotenv()
 
