@@ -95,7 +95,17 @@ def delete_entry(id, force=False):
     del db[id]
     write_db(db)
 
-def update_entry(id, entry):
-    pass
+def update_entry(id, field, value):
+    db = read_db()
+
+    # Check if the ID exists in the download_info
+    if id not in db:
+        print(f"Error: Model with ID '{id}' not found.")
+        return
 
     
+def get_entry_data(id, field, default=None):
+    db = read_db()
+    if id not in db:
+        return default
+    return db[id].get(field, default)

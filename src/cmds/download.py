@@ -1,6 +1,6 @@
 import os
-from src.utils.generic import (get_download_args, 
-                               sanitize_and_validate_arg_input)
+from src.utils.args import get_download_args
+from src.utils.generic import sanitize_and_validate_arg_input
 from src.main import check_and_download_file
 from dotenv import load_dotenv
 load_dotenv()

@@ -1,8 +1,8 @@
 import os
 import json
 from urllib.parse import urlparse
-from src.utils.generic import (get_unload_args, 
-                               sanitize_and_validate_arg_input, 
+from src.utils.args import get_unload_args
+from src.utils.generic import (sanitize_and_validate_arg_input, 
                                get_absolute_model_filepath)
 from src.utils.db import read_db
 from dotenv import load_dotenv

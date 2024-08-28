@@ -1,8 +1,9 @@
 import os
 import json
 from urllib.parse import urlparse
-from src.utils.generic import (get_reload_args,
-                       get_absolute_model_filepath)
+from src.utils.args import get_reload_args
+from src.utils.generic import get_absolute_model_filepath
+from src.utils.db import read_db, update_entry
 from src.main import check_and_download_file
 from dotenv import load_dotenv
 load_dotenv()
@@ -37,7 +38,6 @@ def run_reload():
             # Download the file
             filename = check_and_download_file(url, 
                                                os.path.dirname(local_filepath), 
-                                               db_filepath,
                                                model_type=model_type,
                                                model_base=model_base,
                                                filename=os.path.basename(local_filepath))

@@ -1,10 +1,10 @@
 import os
 import json
-from src.utils.generic import (get_list_args, 
-                               sanitize_and_validate_arg_input, 
+from src.utils.args import get_list_args
+from src.utils.generic import (sanitize_and_validate_arg_input, 
                                get_absolute_model_filepath, 
                                print_db_entry,
-                               clear_terminal,
+                               print_db_entries,
                                get_size_of_path)
 from src.utils.db import read_db
 from dotenv import load_dotenv
@@ -20,9 +20,7 @@ def run_list():
     db = read_db()
 
     if args.all or (not args.local and not args.virtual and not args.model_type and not args.model_base and not args.data):
-        clear_terminal()
-        for id, entry in db.items():
-            print_db_entry(id, entry)
+        print_db_entries(list(db.keys()))
 
     elif args.local:
         for id, entry in db.items():
