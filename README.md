@@ -92,13 +92,11 @@ You can clear up disk space by unloading models from your drive. If you run the 
 
 `cozy unload`
 
-   - #### TBD:
+`cozy unload --tag <tag>` unload all the models with a specific tag
 
-   - `cozy unload --tag <tag>` unload all the models with a specific tag
+`cozy unload --model-type <model-type>` unload all the models with a specific model type
 
-   - `cozy unload --model-type <model-type>` unload all the models with a specific model type
-
-   - `cozy unload --model-base <model-base>` unload all the models with a specific model base
+`cozy unload --model-base <model-base>` unload all the models with a specific model base
 
 
 ### 3. Reload Models
