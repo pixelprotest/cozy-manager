@@ -20,8 +20,13 @@ def get_absolute_model_filepath(filename, model_type, model_base):
     return os.path.join(model_store_directory, model_type, model_base, filename)
 
 def is_model_local(filename, model_type, model_base):
-    filepath = get_absolute_model_filepath(filename, model_type, model_base) 
-    return os.path.exists(filepath)
+    filepath = get_absolute_model_filepath(filename, model_type, model_base)
+    if os.path.isfile(filepath):
+        return True
+    elif os.path.isdir(filepath):
+        # Check if the directory is not empty
+        return len(os.listdir(filepath)) > 0
+    return False
 
 
 def sanitize_and_validate_arg_input(arg_input, mapping_type):

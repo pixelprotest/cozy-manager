@@ -88,7 +88,16 @@ def download_file_from_civitai(url, filename=None, download_dir="downloads"):
                     full_path = os.path.join(download_dir, new_model_dirname[0])
                     dirname = new_model_dirname[0]
                     print(f"New directory created: {full_path}")
-                    return dirname 
+                    
+                    # If a filename was provided, rename the directory
+                    if filename:
+                        new_full_path = os.path.join(download_dir, filename)
+                        os.rename(full_path, new_full_path)
+                        full_path = new_full_path
+                        dirname = filename
+                        print(f"Directory renamed to: {full_path}")
+                    
+                    return dirname
                 else:
                     print("No new directory was created during download.")
             except Exception as e:

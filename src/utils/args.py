@@ -13,13 +13,7 @@ def get_download_args():
     parser.add_argument("--filename", dest='filename', type=str, default=None, help="Custom filename incase repo naming not clear enough")
     return parser.parse_args()
 
-def get_unload_args():
-    parser = argparse.ArgumentParser(description="Unload locally stored data")
-    parser.add_argument("_cmd")
-    parser.add_argument("--tag", type=str, default=None, help="Unloads all files with this tag")
-    parser.add_argument("--model_type", type=str, default=None, help="Unloads all files with this model type")
-    parser.add_argument("--model_base", type=str, default=None, help="Unloads all files with this model base")
-    return parser.parse_args()
+
 
 def get_list_args():
     parser = argparse.ArgumentParser(description="List models.")
@@ -38,9 +32,18 @@ def get_edit_args():
     parser.add_argument("id", type=str, help="ID of the model entry to edit")
     return parser.parse_args()
 
+def get_unload_args():
+    parser = argparse.ArgumentParser(description="Unload locally stored data")
+    parser.add_argument("_cmd")
+    parser.add_argument("--tag", type=str, default=None, help="Unloads all files with this tag")
+    parser.add_argument("--model_type", type=str, default=None, help="Unloads all files with this model type")
+    parser.add_argument("--model_base", type=str, default=None, help="Unloads all files with this model base")
+    return parser.parse_args()
+
 def get_reload_args():
     parser = argparse.ArgumentParser(description="Reload models.")
     parser.add_argument("_cmd")
+    parser.add_argument("--tag", type=str, default=None, help="Only reload the models with this tag")
     parser.add_argument("--model-type", type=str, help="Only reload the models of this type, e.g. controlnet, unet, checkpoint")
     parser.add_argument("--model-base", type=str, help="Only reload the models of this base, e.g. flux1, sdxl, sd15")
     return parser.parse_args()

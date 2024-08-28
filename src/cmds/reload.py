@@ -21,10 +21,16 @@ def run_reload():
     for entry in db.values():
         url = entry.get("url")
         local_filename = entry.get("local_filename")
+        tags = entry.get("tags", [])
         model_type = entry.get("model_type")
         model_base = entry.get("model_base")
         local_filepath = get_absolute_model_filepath(local_filename, model_type, model_base)
-        
+
+        if args.tag:
+            if args.tag not in tags:
+                ## then we can skip this file
+                continue 
+
         if url and local_filename:
             # Ensure the directory exists
             os.makedirs(os.path.dirname(local_filepath), exist_ok=True)
