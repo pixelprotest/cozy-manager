@@ -165,15 +165,23 @@ def print_db_entry(id,
     ## ------------------------------------------------------------------
 
 def print_db_entries(id_list, line_len=80):
-    ## print the first entry with the divider start
-    print_db_entry(id_list[0], line_len=line_len, 
-                   mode='minimal', divider_start=True, divider_end=False)
+    if len(id_list)==0:
+        print("No models found.")
+        return
+    elif len(id_list)>0 and len(id_list)<=2:
+        for id in id_list:
+            print_db_entry(id, line_len=line_len, mode='minimal')
+        return
+    else:
+        ## print the first entry with the divider start
+        print_db_entry(id_list[0], line_len=line_len, 
+                    mode='minimal', divider_start=True, divider_end=False)
 
-    ## now print the rest without the divider start
-    for id in id_list[1:-1]:
-        print_db_entry(id, line_len=line_len,
-                       mode='minimal', divider_start=False, divider_end=False)
+        ## now print the rest without the divider start
+        for id in id_list[1:-1]:
+            print_db_entry(id, line_len=line_len,
+                        mode='minimal', divider_start=False, divider_end=False)
 
-    ## now print the last entry with the divider end
-    print_db_entry(id_list[-1], line_len=line_len,
-                   mode='minimal', divider_start=False, divider_end=True)
+        ## now print the last entry with the divider end
+        print_db_entry(id_list[-1], line_len=line_len,
+                    mode='minimal', divider_start=False, divider_end=True)
