@@ -1,7 +1,6 @@
 import os
 import huggingface_hub
 import yaml
-from src.utils.db import get_entry_data
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -38,7 +37,7 @@ def sanitize_and_validate_arg_input(arg_input, mapping_type):
             return correct_value
     
     error_type = "model_type" if mapping_type == 'model_type_names' else "model_base"
-    raise ValueError(f"Invalid {error_type}: {model_input}. "
+    raise ValueError(f"Invalid {error_type}: {arg_input}. "
                      f"Please use one of the supported {error_type}s: {', '.join(mappings.keys())}, "
                      f"or add new ones to the config.yaml")
 
@@ -51,64 +50,7 @@ def get_user_choice(question, options, line_len=80):
     print('-' * line_len)
     return input(f"Enter your choice (1-{len(options)}): ")
 
-def print_db_entry(id, 
-                   header_str=None, 
-                   line_len=80, 
-                   clear=False, 
-                   divider_start=True, 
-                   divider_end=True, 
-                   mode='detailed'):
-    
-    if clear: ## if True, we clear the screen
-        clear_terminal()
 
-    if header_str:
-        print('-' * line_len)
-        header_len = len(header_str)
-        dash_count = max(0, line_len - 5 - header_len) ## 5 for '--- ' and ' '
-        print(f'--- {header_str} {"-" * dash_count}')
-
-    ## ------------------------------------------------------------------
-    if divider_start:
-        print("-" * line_len)
-    ## ------------------------------------------------------------------
-
-    url = get_entry_data(id, 'url', 'N/A')
-    local_filename = get_entry_data(id, 'local_filename', 'N/A')
-    model_type = get_entry_data(id, 'model_type', 'N/A')
-    model_base = get_entry_data(id, 'model_base', 'N/A')
-    if mode=='detailed':
-        ## load some extra data
-        download_date = get_entry_data(id, 'download_date', 'N/A')
-        tags = get_entry_data(id, 'tags', [])
-        print(f"ID: {id}")
-        print(f"URL: {url}")
-        print(f"Local Filename: {local_filename}")
-        print(f"Model Type: {model_type}")
-        print(f"Model Base: {model_base}")
-        print(f"Download Date: {download_date}")
-        print(f"Tags: {', '.join(tags) if tags else 'None'}")
-    elif mode=='minimal':
-        print(f"[{id}] :: {model_type} / {model_base} / {local_filename}")
-
-    ## ------------------------------------------------------------------
-    if divider_end:
-        print("-" * line_len)
-    ## ------------------------------------------------------------------
-
-def print_db_entries(id_list, line_len=80):
-    ## print the first entry with the divider start
-    print_db_entry(id_list[0], line_len=line_len, 
-                   mode='minimal', divider_start=True, divider_end=False)
-
-    ## now print the rest without the divider start
-    for id in id_list[1:-1]:
-        print_db_entry(id, line_len=line_len,
-                       mode='minimal', divider_start=False, divider_end=False)
-
-    ## now print the last entry with the divider end
-    print_db_entry(id_list[-1], line_len=line_len,
-                   mode='minimal', divider_start=False, divider_end=True)
 
 def clear_terminal():
     print("\033c", end="")

@@ -66,7 +66,8 @@ def run_unload():
             except OSError as e:
                 print(f"Error removing {local_filename}: {e}")
         elif local_filename:
-            print(f"File not found: {local_filepath}")
+            ## if the file is not found, then we can skip it
+            pass
         else:
             print("Local filename not found in entry")
 

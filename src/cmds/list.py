@@ -3,10 +3,8 @@ import json
 from src.utils.args import get_list_args
 from src.utils.generic import (sanitize_and_validate_arg_input, 
                                get_absolute_model_filepath, 
-                               print_db_entry,
-                               print_db_entries,
                                get_size_of_path)
-from src.utils.db import read_db
+from src.utils.db import (read_db, print_db_entries) 
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -40,17 +38,17 @@ def run_list():
     elif args.model_type:
         model_type = sanitize_and_validate_arg_input(args.model_type, 'model_type_names')
         matching_models = [[id, entry] for id, entry in db.items() if entry.get('model_type') == model_type]
+        id_list = [id for id, entry in matching_models]
         print("-" * 80)
         print(f"Found {len(matching_models)} models for model type '{model_type}':")
-        for id, entry in matching_models:
-            print_db_entry(id, entry)
+        print_db_entries(id_list)
     elif args.model_base:
         model_base = sanitize_and_validate_arg_input(args.model_base, 'model_base_names')
         matching_models = [[id, entry] for id, entry in db.items() if entry.get('model_base') == model_base]
+        id_list = [id for id, entry in matching_models]
         print("-" * 80)
         print(f"Found {len(matching_models)} models for model base '{model_base}':")
-        for id, entry in matching_models:
-            print_db_entry(id, entry)
+        print_db_entries(id_list)
     elif args.data:
         print("Calculating the size of the models stored locally...")
         total_size = 0

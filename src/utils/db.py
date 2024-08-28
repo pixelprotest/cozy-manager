@@ -1,5 +1,6 @@
 import os
 import json 
+from src.utils.generic import get_absolute_model_filepath 
 
 db_filepath = os.getenv("MODEL_INFO_FILE")
 config_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), os.path.pardir, 'config.yaml')
@@ -103,9 +104,76 @@ def update_entry(id, field, value):
         print(f"Error: Model with ID '{id}' not found.")
         return
 
+    # Update the specified field with the new value
+    db[id][field] = value
+
+    # Write the updated database back to the file
+    write_db(db)
+
+    print(f"Successfully updated {field} for model '{id}'.")
+
     
 def get_entry_data(id, field, default=None):
     db = read_db()
     if id not in db:
         return default
     return db[id].get(field, default)
+
+def print_db_entry(id, 
+                   header_str=None, 
+                   line_len=80, 
+                   clear=False, 
+                   divider_start=True, 
+                   divider_end=True, 
+                   mode='detailed'):
+    
+    if clear: ## if True, we clear the screen
+        clear_terminal()
+
+    if header_str:
+        print('-' * line_len)
+        header_len = len(header_str)
+        dash_count = max(0, line_len - 5 - header_len) ## 5 for '--- ' and ' '
+        print(f'--- {header_str} {"-" * dash_count}')
+
+    ## ------------------------------------------------------------------
+    if divider_start:
+        print("-" * line_len)
+    ## ------------------------------------------------------------------
+
+    url = get_entry_data(id, 'url', 'N/A')
+    local_filename = get_entry_data(id, 'local_filename', 'N/A')
+    model_type = get_entry_data(id, 'model_type', 'N/A')
+    model_base = get_entry_data(id, 'model_base', 'N/A')
+    if mode=='detailed':
+        ## load some extra data
+        download_date = get_entry_data(id, 'download_date', 'N/A')
+        tags = get_entry_data(id, 'tags', [])
+        print(f"ID: {id}")
+        print(f"URL: {url}")
+        print(f"Local Filename: {local_filename}")
+        print(f"Model Type: {model_type}")
+        print(f"Model Base: {model_base}")
+        print(f"Download Date: {download_date}")
+        print(f"Tags: {', '.join(tags) if tags else 'None'}")
+    elif mode=='minimal':
+        print(f"[{id}] :: {model_type} / {model_base} / {local_filename}")
+
+    ## ------------------------------------------------------------------
+    if divider_end:
+        print("-" * line_len)
+    ## ------------------------------------------------------------------
+
+def print_db_entries(id_list, line_len=80):
+    ## print the first entry with the divider start
+    print_db_entry(id_list[0], line_len=line_len, 
+                   mode='minimal', divider_start=True, divider_end=False)
+
+    ## now print the rest without the divider start
+    for id in id_list[1:-1]:
+        print_db_entry(id, line_len=line_len,
+                       mode='minimal', divider_start=False, divider_end=False)
+
+    ## now print the last entry with the divider end
+    print_db_entry(id_list[-1], line_len=line_len,
+                   mode='minimal', divider_start=False, divider_end=True)

@@ -1,14 +1,13 @@
 import os
-import json
 from src.utils.args import get_edit_args
-from src.utils.generic import (print_db_entry, 
-                               get_user_choice, 
-                               get_absolute_model_filepath)
-from src.utils.db import (write_db, 
-                          get_entry,   
+from src.utils.generic import (get_user_choice, 
+                               get_absolute_model_filepath,
+                               is_model_local)
+from src.utils.db import (get_entry,   
                           get_entry_data, 
                           delete_entry,
-                          update_entry)
+                          update_entry,
+                          print_db_entry)
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -60,10 +59,6 @@ def run_edit():
             update_entry(id, 'local_filename', new_filename)
             print("Filename updated.")
     elif choice == "3": ## remove model from collection
-        if id not in db:
-            print(f"Error: Model with ID '{id}' not found in the database.")
-            return
-
         ## by not forcing, the user will be prompted to confirm the deletion
         delete_entry(id, force=False)
         print(f"Model '{id}' has been removed from the collection.")
