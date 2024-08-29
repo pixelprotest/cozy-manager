@@ -3,10 +3,10 @@
 Cozy Manager is an AI Model Manager command line tool.
 
 ## Key features:
-- 📚 Keep track of your entire model collection, never having to manually download the same model twice.
-- 🚀 Simple command to deploy your model collection on new machines.
 - 🏷️ Automatically renames ambiguous model names to more descriptive names. e.g. `diffusion_pytorch_model.safetensors`..
 - 📁 Automatically organizes your models in sub directories e.g. `/root/lora/flux1`
+- 📚 Keep track of your entire model collection, never having to manually download the same model twice.
+- 🚀 Simple command to deploy your model collection on new machines.
 - 💰 Save money on GBs of cloud storage, by easily freeing up diskspace.
 - 🌐 Download from multiple sources, including Hugging Face and Civitai.
 
