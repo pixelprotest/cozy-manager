@@ -62,7 +62,21 @@ def get_unload_args():
 def get_reload_args():
     parser = argparse.ArgumentParser(description="Reload models.")
     parser.add_argument("_cmd")
+    parser.add_argument("subcmd", nargs='?', default=None, choices=['tag', 'type', 'base'],
+                        help="Subcommand to specify what sort of thing you want to reload")
+    parser.add_argument("subarg", nargs='?', default=None, help="Argument for the subcmd")
     parser.add_argument("--tag", type=str, default=None, help="Only reload the models with this tag")
     parser.add_argument("--model-type", type=str, help="Only reload the models of this type, e.g. controlnet, unet, checkpoint")
     parser.add_argument("--model-base", type=str, help="Only reload the models of this base, e.g. flux1, sdxl, sd15")
-    return parser.parse_args()
+
+    args = parser.parse_args()
+
+    if args.subcmd:
+        if args.subcmd == 'tag':
+            args.tag = args.subarg
+        elif args.subcmd == 'type':
+            args.model_type = args.subarg
+        elif args.subcmd == 'base':
+            args.model_base = args.subarg
+
+    return args
