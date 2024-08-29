@@ -26,6 +26,11 @@ Follow the installation instructions, then to download your first model:
 See more detailed command explainations below to get more granular control on each command.
 
 
+## Migrating and Deploying on New Machines
+Cozy manager makes it easy to migrate and deploy your collection onto a new machine.
+
+Just install this repo on the new machine, then copy the existing `config.yaml` and the `collection.json` onto the new machine, then run `cozy reload` and it will download all the models onto the new machine.
+
 
 
 ## Installation
@@ -49,10 +54,7 @@ See more detailed command explainations below to get more granular control on ea
    MODEL_STORAGE_DIR=/path/to/model/storage/directory
    ```
 
-## Migrating and Deploying on New Machines
-Cozy manager makes it easy to migrate and deploy your collection onto a new machine.
 
-Just install this repo on the new machine, then copy the existing `config.yaml` and the `collection.json` onto the new machine, then run `cozy reload` and it will download all the models onto the new machine.
 
 ## Command Docs
 
