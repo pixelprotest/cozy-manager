@@ -45,18 +45,7 @@ def create_entry(entry):
     ## now add the new info with a new id 
     db[str(id)] = entry 
 
-    with open(db_filepath, "r+") as f:
-        try:
-            db = json.load(f)
-        except json.JSONDecodeError:
-            db = {}
-        
-        db.update(entry)
-        
-        db.seek(0)
-        json.dump(db, f, indent=4)
-        db.truncate()
-
+    write_db(db)
 
 def delete_entry(id, force=False):
     """ Main entry point for purging a model """

@@ -75,6 +75,30 @@ def get_civitai_model_ids(url):
         "model_id": model_id,
         "version_id": version_id
     }
+
+def distill_model_metadata_from_webpage(url, verbose=False):
+    """ mainly used for huggingface, as base and type 
+    categories are not always clearly defined
+    """
+    content = parse_url_to_text(url)
+
+    ## first grab all the aliases for the types and the bases
+    base_name_list = get_model_aliases('model_base_names')
+    model_type_list = get_model_aliases('model_type_names')
+
+    ## count he occurances on the page and assign a confidence value to each 
+    base_model_confidences = calculate_model_confidences(content, base_name_list)
+    model_type_confidences = calculate_model_confidences(content, model_type_list)
+
+    ## distill the highest confidence base and model type
+    highest_base_model = get_highest_confidence(base_model_confidences)
+    highest_model_type = get_highest_confidence(model_type_confidences)
+
+    if verbose:
+        print('distilled base:', highest_base_model)
+        print('distilled type:', highest_model_type)
+
+    return highest_base_model, highest_model_type
     
 def parse_url_to_text(url):
     # Send a GET request to the URL
@@ -155,29 +179,7 @@ def get_highest_confidence(confidence_dict, threshold=0.5):
     else:
         return None
     
-def distill_model_metadata_from_webpage(url, verbose=False):
-    """ mainly used for huggingface, as base and type 
-    categories are not always clearly defined
-    """
-    content = parse_url_to_text(url)
 
-    ## first grab all the aliases for the types and the bases
-    base_name_list = get_model_aliases('model_base_names')
-    model_type_list = get_model_aliases('model_type_names')
-
-    ## count he occurances on the page and assign a confidence value to each 
-    base_model_confidences = calculate_model_confidences(content, base_name_list)
-    model_type_confidences = calculate_model_confidences(content, model_type_list)
-
-    ## distill the highest confidence base and model type
-    highest_base_model = get_highest_confidence(base_model_confidences)
-    highest_model_type = get_highest_confidence(model_type_confidences)
-
-    if verbose:
-        print('distilled base:', highest_base_model)
-        print('distilled type:', highest_model_type)
-
-    return highest_base_model, highest_model_type
 
 
 if __name__ == "__main__":

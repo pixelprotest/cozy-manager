@@ -1,6 +1,7 @@
 import json
 import os
 from src.utils.generic import get_absolute_model_filepath
+from src.utils.db import create_entry
 
 def create_download_info(url, 
                          filename, 
@@ -46,3 +47,6 @@ def create_download_info(url,
 
     new_info['tags'] = []
     new_info['force_keep'] = False ## if true the file will not be deleted when running the cleanup script
+
+    ## now lets add it to the db
+    create_entry(new_info)

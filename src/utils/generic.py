@@ -38,12 +38,15 @@ def sanitize_and_validate_arg_input(arg_input, mapping_type):
         mappings = data[mapping_type]
     
     for correct_value, variations in mappings.items():
+        if arg_input==correct_value:
+            return correct_value
+
         variations = [v.lower().strip() for v in variations]
         if arg_input in variations:
             return correct_value
     
     error_type = "model_type" if mapping_type == 'model_type_names' else "model_base"
-    raise ValueError(f"Invalid {error_type}: {arg_input}. "
+    raise ValueError(f"Invalid {error_type}: >> {arg_input} << "
                      f"Please use one of the supported {error_type}s: {', '.join(mappings.keys())}, "
                      f"or add new ones to the config.yaml")
 

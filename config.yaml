@@ -24,6 +24,7 @@ model_base_names:
   sd15:
     - sd-15
     - sd_15
+    - sd 1.5
     - stable-diffusion-1.5
     - stablediffusion15
   pony:
