@@ -56,26 +56,25 @@ See more detailed command explainations below to get more granular control on ea
 
 ### 1. Download a model
 
-To download a model, the basic command is:
+To download a model you can simply run this command:
+
+`cozy download <url>` 
+
+the `<url>` can either be:
+- huggingface direct link to a file e.g. `https://huggingface.co/.../.../checkpoint.safetensors`
+- civitai url of general model page or model-version page.
+
+When you run the command it will automatically discover the `model-type` e.g. lora, controlnet, vae 
+and the `model-base` e.g. `sd15`, `sdxl`, `flux` or `pony`
+
+When you run the command it will automatically check against the `filenames_to_auto_rename` list in the `config.yaml` file at the root of this repo.
+In case it comes across ambiguous filenames like `diffusion_pytorch_model.safetensors` or `lora.safetensors` it will rename the downloaded file to a more descriptive name based on the huggingface repo name.
+
+Generally the automated discovery should work well, but incase it did not you can use the `cozy edit` command to easily fix it.
+
+To skip all the automation and have full manual control:
 
 `cozy download <url> <model-type> <model-base-type> <optional filename>` 
-
-For example lets say we want to download a `sdxl` `lora` from civitai, 
-we can copy the url and download it on the cli like this:
-
-`cozy download https://civitai/path/to/lora/here lora sdxl`
-
-Or lets say we want to download the `flux1-dev` `ae.safetensors` file from huggingface.
-The original `ae.safetensors` filename is a bit ambiguous, so we can pass in a new name
-to store it like `flux1-dev-ae.safetensors`
-
-`cozy https://huggingface.co/black-forest-labs/FLUX.1-dev/blob/main/ae.safetensors vae flux1 flux1-dev-ae.safetensors`
-
-The `model-type` and the `model-base-type` will create subdirectories in the `MODEL_STORAGE_DIR`
-
-if no `--model-type` and no `--model-base` are passed int, it will automatically try to distill 
-the type and base for you.
-
 
 ### 2. Unload Models 
 
@@ -117,17 +116,9 @@ To list the items in your collection you can simply list all of them by doing:
 
 `cozy list base flux` to list all the flux models in your collection
 
-You can be even more granular by passing in the `--model-type` and `--model-base` flags, like here listing only the flux loras in your collection:
+`cozy list tag based` to list all the models that are tagged `based` in your collection
 
-`cozy list --model-type lora --model-base flux`
-
-to list all the models that are tagged `based` in your collection
-
-`cozy list tag based` 
-
-finally you can check how much data is stored locally by doing:
-
-`cozy list data`
+`cozy list data` finally you can check how much data is stored locally by doing:
 
 ### 6. Edit Mode
 
@@ -142,12 +133,14 @@ this will open a command line prompt asking you what you want to edit, it will w
 - change the model base
 - remove the model from the collection
 
-### Granular Control with Multiple Flags
+### More Control with Multiple Flags
 Some of the commands accept passing in both `--model-type` and `--model-base` to get more granular control e.g.
+
+`cozy list loaded --model-type lora --model-base flux` to list all the local flux loras
 
 `cozy unload --model-type lora --model-base flux` to unload all the flux loras in your collection
 
 `cozy reload --model-type lora --model-base flux` to reload all the flux loras
 
-`cozy list loaded --model-type lora --model-base flux` to list all the local flux loras
+
 
