@@ -11,27 +11,33 @@ Cozy Manager is an AI Model Manager command line tool.
 - 🌐 Download from multiple sources, including Hugging Face and Civitai.
 
 ## Quick Start
-Follow the [installation](https://github.com/pixelprotest/cozy-manager/blob/b1dae1301e07f1429d19f30acc9d1fec67d67c19/README.md?plain=1#L36) instructions and download your first model:
+Follow the installationinstructions and download your first model:
 
 `cozy download <url>` 
 
-The basic commands are as follows:
 
-`cozy list` list all the models in your collection
 
-`cozy unload` clear out disk space and remove all locally stored models
+Basic commands are as follows:
 
-`cozy reload` reload all previously downloaded models
+`cozy list` list the models in your collection
 
-`cozy edit <id>` edit the db entry for a model this will open a command line prompt asking you what you want to edit, it will walk you through some options
+`cozy unload` remove all locally stored models, to clear disk space
+
+`cozy reload` reload / redownload all models in your collection
+
+`cozy edit <id>` edit a model entry in your collection
 
 See more detailed command explainations below to get more granular control on each command.
+
+
 
 
 ## Migrating and Deploying on New Machines
 Cozy manager makes it easy to migrate and deploy your collection onto a new machine.
 
-Just install this repo on the new machine, then copy the existing `config.yaml` and the `collection.json` onto the new machine and run `cozy reload` and it will download all the models onto the new machine.
+Just install this repo on the new machine, then copy the existing `config.yaml`, `collection.json` and `.env` files onto the new machine and run `cozy reload` and it will download all the models onto the new machine.
+
+
 
 
 
