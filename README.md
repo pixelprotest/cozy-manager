@@ -3,12 +3,30 @@
 Cozy Manager is an AI Model Manager command line tool.
 
 ## Key features:
-- 🏷️ Automatically renames ambiguous model names to more descriptive names. e.g. `diffusion_pytorch_model.safetensors`..
 - 📁 Automatically organizes your models in sub directories e.g. `/root/lora/flux1`
+- 🏷️ Automatically renames ambiguous model names to more descriptive names. e.g. `diffusion_pytorch_model.safetensors`..
 - 📚 Keep track of your entire model collection, never having to manually download the same model twice.
 - 🚀 Simple command to deploy your model collection on new machines.
-- 💰 Save money on GBs of cloud storage, by easily freeing up diskspace.
+- 💰 Save money on rented cloud storage, by easily loading and unloading diskspace.
 - 🌐 Download from multiple sources, including Hugging Face and Civitai.
+
+## Quick Start
+Follow the installation instructions, then to download your first model:
+
+`cozy download <url>` 
+
+`cozy list` list all the models in your collection
+
+`cozy unload` clear out disk space and remove all locally stored models:
+
+`cozy reload` reload all previously downloaded models
+
+`cozy edit <id>` edit the db entry for a model this will open a command line prompt asking you what you want to edit, it will walk you through some options:
+
+See more detailed command explainations below to get more granular control on each command.
+
+
+
 
 ## Installation
 
@@ -32,28 +50,7 @@ Cozy Manager is an AI Model Manager command line tool.
    ```
 
 
-## Quick Start
-Follow the installation instructions above, then to download your first model:
 
-`cozy download <url> <type> <base> <optional local filename>`
-- url: could be a huggingface url to a .safetensors file or a generic civitai model page url
-- type: can be a model type like `lora`, `vae`, `controlnet`, etc
-- base: can be a model base like `sdxl`, `sd1.5`, `sd1.0`, etc
-- optional local filename: if you want to store the model with a different name than the original filename
-
-
-`cozy unload` clear out disk space and remove all locally stored models: 
-
-`cozy reload` reload all previously downloaded models
-
-`cozy list` list all the models in your collection
-
-`cozy edit <id>` edit the db entry for a model this will open a command line prompt asking you what you want to edit, it will walk you through some options:
-- add / remove / clear tags
-- change the local filename
-- change the model type
-- change the model base
-- remove the model from the collection
 
 
 
@@ -100,27 +97,47 @@ we can redownload all the models by running:
 
 `cozy reload`
 
-`cozy reload --tag <tag>` reloads all the models with a specific tag
+`cozy reload type lora` reloads all the loras in your collection
 
-`cozy reload --model-type <model-type>` reloads all the models with a specific model type
+`cozy reload base flux` reloads all the flux models in your collection
 
-`cozy reload --model-base <model-base>` reloads all the models with a specific model base
+`cozy reload tag based` reloads all the models with a specific tag
 
 ### 5. List Models
 
-`cozy list --all`
+To list the items in your collection you can simply list all of them by doing:
 
-`cozy list --loaded` list the ones that are currently downloaded locally
+`cozy list` 
 
-`cozy list --unloaded` list the ones that are in the collection but _not_ downloaded
+`cozy list loaded` to list all the models that _are_ stored locally
 
-`cozy list --data` list the size of the models stored locally 
+`cozy list unloaded` to list all the models that are _not_ stored locally
 
+`cozy list type lora` to list all the loras in your collection
+
+`cozy list base flux` to list all the flux models in your collection
+
+You can be even more granular by passing in the `--model-type` and `--model-base` flags, like here listing only the flux loras in your collection:
+
+`cozy list --model-type lora --model-base flux`
+
+to list all the models that are tagged `based` in your collection
+
+`cozy list tag based` 
+
+finally you can check how much data is stored locally by doing:
+
+`cozy list data`
 
 ### 6. Edit Mode
+
+To edit the items in your collection, you can find the `id` using the `cozy list` command, and then by doing:
 
 `cozy edit <id>`
 
 this will open a command line prompt asking you what you want to edit, it will walk you through some options
-
--
+- add / remove / clear tags
+- change the local filename
+- change the model type
+- change the model base
+- remove the model from the collection
