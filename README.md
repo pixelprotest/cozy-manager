@@ -126,3 +126,5 @@ we can redownload all the models by running:
 `cozy edit <id>`
 
 this will open a command line prompt asking you what you want to edit, it will walk you through some options
+
+-
