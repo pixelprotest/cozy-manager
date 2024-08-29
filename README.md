@@ -83,11 +83,11 @@ You can clear up disk space by unloading models from your drive. If you run the 
 
 `cozy unload`
 
-`cozy unload --tag <tag>` unload all the models with a specific tag
+`cozy unload type lora` unloads all the loras in your collection
 
-`cozy unload --model-type <model-type>` unload all the models with a specific model type
+`cozy unload base flux` unloads all the flux models in your collection
 
-`cozy unload --model-base <model-base>` unload all the models with a specific model base
+`cozy unload tag based` unloads all the models tagged `based`
 
 
 ### 3. Reload Models
@@ -141,3 +141,13 @@ this will open a command line prompt asking you what you want to edit, it will w
 - change the model type
 - change the model base
 - remove the model from the collection
+
+### Granular Control with Multiple Flags
+Some of the commands accept passing in both `--model-type` and `--model-base` to get more granular control e.g.
+
+`cozy unload --model-type lora --model-base flux` to unload all the flux loras in your collection
+
+`cozy reload --model-type lora --model-base flux` to reload all the flux loras
+
+`cozy list loaded --model-type lora --model-base flux` to list all the local flux loras
+
