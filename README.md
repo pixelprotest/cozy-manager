@@ -50,11 +50,9 @@ See more detailed command explainations below to get more granular control on ea
    ```
 
 
+## Command Docs
 
-
-
-
-### 1. Download a model
+#### Download
 
 To download a model you can simply run this command:
 
@@ -76,7 +74,7 @@ To skip all the automation and have full manual control:
 
 `cozy download <url> <model-type> <model-base-type> <optional filename>` 
 
-### 2. Unload Models 
+#### Unload
 
 You can clear up disk space by unloading models from your drive. If you run the unload command it will remove all the locally stored models from your drive. e.g.
 
@@ -89,7 +87,7 @@ You can clear up disk space by unloading models from your drive. If you run the 
 `cozy unload tag based` unloads all the models tagged `based`
 
 
-### 3. Reload Models
+#### Reload
 
 Since all the information of our previously downloaded models are stored in a json file, 
 we can redownload all the models by running:
@@ -102,7 +100,7 @@ we can redownload all the models by running:
 
 `cozy reload tag based` reloads all the models with a specific tag
 
-### 5. List Models
+#### List
 
 To list the items in your collection you can simply list all of them by doing:
 
@@ -120,7 +118,7 @@ To list the items in your collection you can simply list all of them by doing:
 
 `cozy list data` finally you can check how much data is stored locally by doing:
 
-### 6. Edit Mode
+#### Edit
 
 To edit the items in your collection, you can find the `id` using the `cozy list` command, and then by doing:
 
