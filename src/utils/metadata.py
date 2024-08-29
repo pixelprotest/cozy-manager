@@ -118,6 +118,19 @@ def parse_url_to_text(url):
     else:
         print(f"Error: Unable to fetch the webpage. Status code: {response.status_code}")
         return None
+    
+def get_model_list(config_key_name):
+    """ returns the top level key names for model_type_names or model_base_names
+    as stored in the config.yaml file
+    """
+    with open(config_path, 'r') as f:
+        data = yaml.safe_load(f)
+
+    return list(data[config_key_name].keys())
+
+
+
+    
 
 def get_model_aliases(config_key_name):
     """ takes a config_key_name like 'model_base_names' or 'model_type_names' 

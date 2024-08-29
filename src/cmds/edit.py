@@ -8,6 +8,7 @@ from src.utils.db import (get_entry,
                           delete_entry,
                           update_entry,
                           print_db_entry)
+from src.utils.metadata import get_model_list
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -29,6 +30,7 @@ def run_edit():
     question = "What would you like to edit?"
     options = ["Edit tags", 
                "Edit local filename",
+               "Edit model type",
                "Remove model from collection",
                "Cancel"]
     choice = get_user_choice(question, options)
@@ -58,7 +60,31 @@ def run_edit():
             ## and now update the db
             update_entry(id, 'local_filename', new_filename)
             print("Filename updated.")
-    elif choice == "3": ## remove model from collection
+    elif choice == "3": ## edit model type
+        current_filename = get_entry_data(id, 'local_filename', '')
+        model_type = model_entry.get('model_type')
+        model_base = model_entry.get('model_base')
+        new_model_type = menu_edit_model_type(id)
+        ## now lets get the paths.
+        old_path = get_absolute_model_filepath(current_filename, model_type, model_base)
+        new_path = get_absolute_model_filepath(current_filename, new_model_type, model_base)
+
+
+        ## now lets rename the file## now try to rename the file
+        if is_model_local(current_filename, model_type, model_base):
+            ## make sure the new path directory exists.
+            new_path_dir = os.path.dirname(new_path)
+            os.makedirs(new_path_dir, exist_ok=True)
+
+            try:
+                os.rename(old_path, new_path)
+            except OSError as e:
+                print(f"Error renaming file: {e}")
+                return
+        ## and now update the db
+        update_entry(id, 'model_type', new_model_type)
+        print_db_entry(args.id, header_str='Finished editing model type')
+    elif choice == "4": ## remove model from collection
         ## by not forcing, the user will be prompted to confirm the deletion
         delete_entry(id, force=False)
         print(f"Model '{id}' has been removed from the collection.")
@@ -120,3 +146,25 @@ def menu_edit_tags_remove_tag(tags):
 def menu_edit_tags_clear_all_tags():
     print("All tags cleared.")
     return []
+
+def menu_edit_model_type(id):
+    print_db_entry(id, header_str='Editing this model entry')
+    current_model_type = get_entry_data(id, 'model_type', '')
+    print(f"Current model type: {current_model_type}")
+
+    question = f"Currently the model type is: {current_model_type}. What would you like to change it to?"
+    model_type_list = get_model_list('model_type_names')
+    options = model_type_list
+    choice = get_user_choice(question, options)
+
+    try:
+        choice_index = int(choice) - 1
+        if 0 <= choice_index < len(options):
+            new_model_type = options[choice_index]
+            print(f"You've selected: {new_model_type}")
+            return new_model_type
+        else:
+            print("Invalid choice. No changes made to model type.")
+    except ValueError:
+        print("Invalid input. No changes made to model type.")
+    return current_model_type
