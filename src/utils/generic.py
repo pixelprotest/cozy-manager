@@ -4,10 +4,12 @@ import yaml
 from dotenv import load_dotenv
 load_dotenv()
 
+hf_token = os.getenv("HF_TOKEN")
 config_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), os.path.pardir, 'config.yaml')
 
 def log_into_huggingface():
-    huggingface_hub.login(hf_token)
+    if hf_token:
+        huggingface_hub.login(hf_token)
 
 def get_absolute_model_filepath(filename, model_type, model_base):
     model_store_directory = os.getenv("MODEL_STORAGE_DIR")

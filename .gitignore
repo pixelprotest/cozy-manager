@@ -1,6 +1,7 @@
 .venv/
 download_info.json
 my_downloads/
+model_store/
 *.safetensors
 .env
 .idea
