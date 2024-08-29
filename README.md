@@ -21,7 +21,7 @@ Basic commands are as follows:
 
 `cozy list` list the models in your collection
 
-`cozy unload` remove all locally stored models, to clear disk space
+`cozy unload` unload / delete locally stored files, to clear disk space
 
 `cozy reload` reload / redownload all models in your collection
 
