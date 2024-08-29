@@ -38,6 +38,7 @@ def sanitize_and_validate_arg_input(arg_input, mapping_type):
         mappings = data[mapping_type]
     
     for correct_value, variations in mappings.items():
+        variations = [v.lower().strip() for v in variations]
         if arg_input in variations:
             return correct_value
     

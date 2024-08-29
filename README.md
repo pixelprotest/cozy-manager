@@ -61,8 +61,6 @@ Follow the installation instructions above, then to download your first model:
 - remove the model from the collection
 
 
-
-
 ### 1. Download a model
 
 To download a model, the basic command is:
