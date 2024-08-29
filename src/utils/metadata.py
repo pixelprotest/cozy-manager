@@ -3,7 +3,8 @@ import re
 import yaml
 import requests
 from bs4 import BeautifulSoup
-from src.utils.generic import sanitize_and_validate_arg_input
+from src.utils.generic import (sanitize_and_validate_arg_input, 
+                               sanitize_huggingface_file_to_repo_url)
 
 config_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), os.path.pardir, 'config.yaml')
 
@@ -16,6 +17,7 @@ def get_model_info(url, verbose=False):
     if 'civitai' in url:
         return get_civitai_model_info(url, verbose)
     elif 'huggingface' in url:
+        url = sanitize_huggingface_file_to_repo_url(url)
         return distill_model_metadata_from_webpage(url, verbose)
     else:
         print('url not supported')
@@ -98,7 +100,7 @@ def distill_model_metadata_from_webpage(url, verbose=False):
         print('distilled base:', highest_base_model)
         print('distilled type:', highest_model_type)
 
-    return highest_base_model, highest_model_type
+    return highest_model_type, highest_base_model 
     
 def parse_url_to_text(url):
     # Send a GET request to the URL

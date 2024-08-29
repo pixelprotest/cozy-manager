@@ -105,6 +105,16 @@ def get_huggingface_repo_name(url):
 def get_huggingface_filename(url):
     return url.split("/")[-1]   
 
+def sanitize_huggingface_file_to_repo_url(url):
+    """ can receive a file url e.g. with .safetensors file
+    and returns the full huggingface repo url
+    """
+    repo_id = get_huggingface_repo_id(url)
+    full_url = f"https://huggingface.co/{repo_id}"
+
+    return full_url
+
+
 def validate_filename(url):
     print('validating filename:')
     auto_rename_filenames = get_filenames_to_auto_rename()
