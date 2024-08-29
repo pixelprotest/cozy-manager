@@ -58,7 +58,10 @@ Follow the installation instructions above, then to download your first model:
 `cozy edit <id>` edit the db entry for a model this will open a command line prompt asking you what you want to edit, it will walk you through some options:
 - add / remove / clear tags
 - change the local filename
+- change the model type
+- change the model base
 - remove the model from the collection
+
 
 
 ### 1. Download a model
@@ -76,12 +79,12 @@ Or lets say we want to download the `flux1-dev` `ae.safetensors` file from huggi
 The original `ae.safetensors` filename is a bit ambiguous, so we can pass in a new name
 to store it like `flux1-dev-ae.safetensors`
 
-`pp-manager-dl https://huggingface.co/black-forest-labs/FLUX.1-dev/blob/main/ae.safetensors vae flux1 flux1-dev-ae.safetensors`
+`cozy https://huggingface.co/black-forest-labs/FLUX.1-dev/blob/main/ae.safetensors vae flux1 flux1-dev-ae.safetensors`
 
 The `model-type` and the `model-base-type` will create subdirectories in the `MODEL_STORAGE_DIR`
 
-   - #### TBD
-   - automatically detect the model type and the model base from the url
+if no `--model-type` and no `--model-base` are passed int, it will automatically try to distill 
+the type and base for you.
 
 
 ### 2. Unload Models 
