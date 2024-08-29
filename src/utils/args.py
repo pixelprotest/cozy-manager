@@ -13,18 +13,37 @@ def get_download_args():
     parser.add_argument("--filename", dest='filename', type=str, default=None, help="Custom filename incase repo naming not clear enough")
     return parser.parse_args()
 
-
-
 def get_list_args():
     parser = argparse.ArgumentParser(description="List models.")
-    parser.add_argument("_cmd")
+    parser.add_argument("_cmd", help="The main command (should be 'list')")
+    parser.add_argument("subcmd", nargs='?', default=None, choices=['loaded', 'unloaded', 'all', 'type', 'base', 'data'],
+                        help="Subcommand to specify what sort of thing you want to list")
+    parser.add_argument("subarg", nargs='?', default=None, help="Argument for the subcmd")
     parser.add_argument("--all", action="store_true", help="List all models")
     parser.add_argument("--loaded", action="store_true", help="List local models")
     parser.add_argument("--unloaded", action="store_true", help="List virtual models")
     parser.add_argument("--model-type", type=str, help="Filter models by model type")
     parser.add_argument("--model-base", type=str, help="Filter models by model base")
     parser.add_argument("--data", action="store_true", help="Show the size of the models stored locally")
-    return parser.parse_args()
+    
+    args = parser.parse_args()
+    
+    # Handle the case where subcommand is used
+    if args.subcmd:
+        if args.subcmd == 'loaded':
+            args.loaded = True
+        elif args.subcmd == 'unloaded':
+            args.unloaded = True
+        elif args.subcmd == 'all':
+            args.all = True
+        elif args.subcmd == 'type' and args.subarg:
+            args.model_type = args.subarg
+        elif args.subcmd == 'base' and args.subarg:
+            args.model_base = args.subarg
+        elif args.subcmd == 'data':
+            args.data = True
+    
+    return args
 
 def get_edit_args():
     parser = argparse.ArgumentParser(description="Edit collection entry.")
