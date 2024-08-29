@@ -31,6 +31,7 @@ def run_edit():
     options = ["Edit tags", 
                "Edit local filename",
                "Edit model type",
+               "Edit model base",
                "Remove model from collection",
                "Cancel"]
     choice = get_user_choice(question, options)
@@ -84,7 +85,31 @@ def run_edit():
         ## and now update the db
         update_entry(id, 'model_type', new_model_type)
         print_db_entry(args.id, header_str='Finished editing model type')
-    elif choice == "4": ## remove model from collection
+    elif choice == "4": ## edit model type
+        current_filename = get_entry_data(id, 'local_filename', '')
+        model_type = model_entry.get('model_type')
+        model_base = model_entry.get('model_base')
+        new_model_base = menu_edit_model_base(id)
+        ## now lets get the paths.
+        old_path = get_absolute_model_filepath(current_filename, model_type, model_base)
+        new_path = get_absolute_model_filepath(current_filename, model_type, new_model_base)
+
+
+        ## now lets rename the file## now try to rename the file
+        if is_model_local(current_filename, model_type, model_base):
+            ## make sure the new path directory exists.
+            new_path_dir = os.path.dirname(new_path)
+            os.makedirs(new_path_dir, exist_ok=True)
+
+            try:
+                os.rename(old_path, new_path)
+            except OSError as e:
+                print(f"Error renaming file: {e}")
+                return
+        ## and now update the db
+        update_entry(id, 'model_base', new_model_base)
+        print_db_entry(args.id, header_str='Finished editing model base')
+    elif choice == "5": ## remove model from collection
         ## by not forcing, the user will be prompted to confirm the deletion
         delete_entry(id, force=False)
         print(f"Model '{id}' has been removed from the collection.")
@@ -168,3 +193,25 @@ def menu_edit_model_type(id):
     except ValueError:
         print("Invalid input. No changes made to model type.")
     return current_model_type
+
+def menu_edit_model_base(id):
+    print_db_entry(id, header_str='Editing this model entry')
+    current_model_base = get_entry_data(id, 'model_base', '')
+    print(f"Current model base: {current_model_base}")
+
+    question = f"Currently the model base is: {current_model_base}. What would you like to change it to?"
+    model_base_list = get_model_list('model_base_names')
+    options = model_base_list
+    choice = get_user_choice(question, options)
+
+    try:
+        choice_index = int(choice) - 1
+        if 0 <= choice_index < len(options):
+            new_model_base = options[choice_index]
+            print(f"You've selected: {new_model_base}")
+            return new_model_base 
+        else:
+            print("Invalid choice. No changes made to model type.")
+    except ValueError:
+        print("Invalid input. No changes made to model type.")
+    return current_model_base 
