@@ -34,6 +34,16 @@ def run_list():
                                                                              entry.get('model_type'), 
                                                                              entry.get('model_base'))]
         print_db_entries(unloaded_ids)
+    elif args.model_type and args.model_base: ## in case both args are provided 
+        model_type = sanitize_and_validate_arg_input(args.model_type, 'model_type_names')
+        model_base = sanitize_and_validate_arg_input(args.model_base, 'model_base_names')
+        matching_models = [[id, entry] for id, entry in db.items() 
+                           if entry.get('model_type') == model_type and 
+                              entry.get('model_base') == model_base]
+        id_list = [id for id, entry in matching_models]
+        print("-" * 80)
+        print(f"Found {len(matching_models)} models for model type '{model_type}' and model base '{model_base}':")
+        print_db_entries(id_list)
     elif args.model_type:
         model_type = sanitize_and_validate_arg_input(args.model_type, 'model_type_names')
         matching_models = [[id, entry] for id, entry in db.items() if entry.get('model_type') == model_type]

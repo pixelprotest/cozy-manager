@@ -59,8 +59,6 @@ def get_user_choice(question, options, line_len=80):
     print('-' * line_len)
     return input(f"Enter your choice (1-{len(options)}): ")
 
-
-
 def clear_terminal():
     print("\033c", end="")
 

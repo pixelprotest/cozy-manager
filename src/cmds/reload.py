@@ -49,6 +49,11 @@ def run_reload():
                 ## then we can skip this file
                 continue
 
+        if load_model_type and load_model_base:
+            if load_model_type != model_type or load_model_base != model_base:
+                ## then we can skip this file
+                continue
+
         if url and local_filename:
             # Ensure the directory exists
             os.makedirs(os.path.dirname(local_filepath), exist_ok=True)

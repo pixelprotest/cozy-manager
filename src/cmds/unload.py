@@ -45,6 +45,10 @@ def run_unload():
         if clear_model_base:
             if clear_model_base!= model_base:
                 continue
+
+        if clear_model_type and clear_model_base:
+            if clear_model_type != model_type or clear_model_base != model_base:
+                continue    
         
         ## if we passed in a force_keep flag, and the entry has a force_keep flag
         if force_keep:
