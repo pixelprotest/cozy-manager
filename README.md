@@ -1,21 +1,14 @@
-# Cozy AI Model Manager
+# Cozy Manager
 
-Cozy AI Model Manager is a command line tool for managing your AI Model Collection.
+Cozy Manager is an AI Model Manager command line tool.
 
 ## Key features:
-- Keep track of your entire model collection, never having to manually download the same model twice.
-- Simple command to deploy your model collection on new machines.
-- Automatically renames ambiguous model names to descriptive names based on repo:
-
-   e.g. `https://huggingface.co/pixelprotest/monkey-island-flux-lora/resolve/main/diffusion_pytorch_model.safetensors`
-
-   e.g. `diffusion_pytorch_model.safetensors` becomes `monkey-island-flux-lora.safetensors`
-- Organizes your models in sub directories based on `model type` and `model base`:
-
-   e.g. `model_store/lora/flux1/monkey-island-flux-lora.safetensors`
-
-- Free up diskspace and save money on paying for GBs of persistent cloud storage.
-- Download from multiple sources, including Hugging Face and Civitai.
+- 📚 Keep track of your entire model collection, never having to manually download the same model twice.
+- 🚀 Simple command to deploy your model collection on new machines.
+- 🏷️ Automatically renames ambiguous model names to more descriptive names. e.g. `diffusion_pytorch_model.safetensors`..
+- 📁 Automatically organizes your models in sub directories e.g. `/root/lora/flux1`
+- 💰 Save money on GBs of cloud storage, by easily freeing up diskspace.
+- 🌐 Download from multiple sources, including Hugging Face and Civitai.
 
 ## Installation
 
