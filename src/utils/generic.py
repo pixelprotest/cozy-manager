@@ -8,6 +8,11 @@ hf_token = os.getenv("HF_TOKEN")
 config_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), os.path.pardir, 'config.yaml')
 
 def log_into_huggingface():
+    ## check if we already logged in
+    if huggingface_hub.HfFolder.get_token() is not None:
+        return
+
+    ## if we have a token, use it
     if hf_token:
         huggingface_hub.login(hf_token)
 
