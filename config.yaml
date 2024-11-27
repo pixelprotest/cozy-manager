@@ -29,6 +29,8 @@ model_base_names:
     - stablediffusion15
   pony:
     - PONY
+  other:
+    - other
 
 model_type_names:
   loras:
